@@ -1,1 +1,6 @@
+/* System Files */
+.DS_Store
 .idea/
+
+/* Don't include DBs */
+**/*.sqlite

@@ -6,7 +6,7 @@
  * @param string $content The HTML content to insert into the main section.
  */
 
-namespace DuckyCMS\Layout;
+namespace DuckyCMS\SetupLayout;
 
 function render_layout(string $title = '', string $content = ''): void
 {
