@@ -5,26 +5,25 @@
 
 namespace DuckyCMS\SetupLayout;
 
-/**
- * Exit if not accessed directly
- */
-if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
-  exit('Nope.');
-}
+require_once dirname(__DIR__, 2) . '/bootstrap.php';
 
 use PDO;
 use PDOException;
 
 require_once '../../templates/layout.php';
 
-if (!defined('DUCKY_ROOT')) {
-  define('DUCKY_ROOT', dirname(__DIR__, 2));
-}
-
 /**
  * We need to store the db name and future settings for later steps
  */
 session_start();
+
+/**
+ * If for some reason the session has a db name that no longer exists, unset it
+ */
+if (isset($_SESSION['db_path']) && !file_exists($_SESSION['db_path'])) {
+  unset($_SESSION['db_path']);
+}
+
 $page_title = 'DuckyCMS Database Setup';
 $message    = '';
 
@@ -37,7 +36,7 @@ $schema = require DUCKY_ROOT . '/db/schema.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $db_base = basename($_POST['db_name']);
   $db_name = $db_base . '.sqlite';
-  $db_path = __DIR__ . "/../../db/$db_name";
+  $db_path = DUCKY_ROOT . "/db/$db_name";
 
   if (file_exists($db_path)) {
     $message = '<p>Database file already exists. Choose a different name.</p>';

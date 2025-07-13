@@ -5,12 +5,7 @@
 
 namespace DuckyCMS\SetupLayout;
 
-/**
- * Exit if not accessed directly
- */
-if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
-  exit('Nope.');
-}
+require_once dirname(__DIR__, 2) . '/bootstrap.php';
 
 use PDO;
 use PDOException;
@@ -62,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
       $stmt->execute([':username' => $username, ':password' => $hashed_password]);
-      $message = '<p>User created successfully!</p>';
+      $message = '<p>User created successfully! <a href="/auth/login.php">Go to login</a>.</p>';
     } catch (PDOException $error) {
       $message = '<p>Error creating user: ' . htmlspecialchars($error->getMessage()) . '</p>';
     }
