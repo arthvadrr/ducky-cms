@@ -1,27 +1,39 @@
 <?php
 /**
- * Set up DB connection
+ * This file is step one of the setup. It inits the DB.
  */
 
-namespace DuckyCMS\Layout;
+namespace DuckyCMS\SetupLayout;
 
-session_start();
+/**
+ * Exit if not accessed directly
+ */
+if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
+  exit('Nope.');
+}
 
-use Exception;
 use PDO;
+use PDOException;
 
 require_once '../../templates/layout.php';
 
-/**
- * Handle the layout
- */
-$page_title = 'DuckyCMS Database Setup';
+if (!defined('DUCKY_ROOT')) {
+  define('DUCKY_ROOT', dirname(__DIR__, 2));
+}
 
-$message = '';
+/**
+ * We need to store the db name and future settings for later steps
+ */
+session_start();
+$page_title = 'DuckyCMS Database Setup';
+$message    = '';
+
 
 /**
  * Handle db creation. Session is used to store the db name for the next step
  */
+$schema = require DUCKY_ROOT . '/db/schema.php';
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $db_base = basename($_POST['db_name']);
   $db_name = $db_base . '.sqlite';
@@ -37,20 +49,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
       $db = new PDO("sqlite:$db_path");
       $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-      $schema = "
-              CREATE TABLE IF NOT EXISTS users (
-                  id INTEGER PRIMARY KEY AUTOINCREMENT,
-                  username TEXT NOT NULL,
-                  password TEXT NOT NULL,
-                  created_at TEXT DEFAULT CURRENT_TIMESTAMP
-              );
-          ";
-
       $db->exec($schema);
       $_SESSION['db_path'] = $db_path;
       $message             = '<p>Database created successfully!</p><p><a href="step-two.php">Continue to Step 2</a></p>';
-    } catch (Exception $error) {
+    } catch (PDOException $error) {
       $message = '<p>Error: ' . htmlspecialchars($error->getMessage()) . '</p>';
     }
   }

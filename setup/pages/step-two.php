@@ -1,26 +1,39 @@
 <?php
 /**
- * Set up DB connection
+ * This file is step two of the setup. It inits the DB.
  */
-namespace DuckyCMS\Layout;
 
+namespace DuckyCMS\SetupLayout;
+
+/**
+ * Exit if not accessed directly
+ */
+if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
+  exit('Nope.');
+}
+
+use PDO;
+use PDOException;
+
+/**
+ * Include the layout for the html
+ */
+require_once '../../templates/layout.php';
+
+/**
+ * Make session available if it exists and make sure we have a db path from step 1.
+ */
 session_start();
 
 if (!isset($_SESSION['db_path']) || !file_exists($_SESSION['db_path'])) {
   die('No valid database found. Please complete Step 1 first.');
 }
 
-require_once '../../templates/layout.php';
-
-use PDO;
-use PDOException;
-
 /**
  * Handle the layout
  */
 $page_title = 'DuckyCMS Create Admin User';
-
-$message = '';
+$message    = '';
 
 /**
  * Handle adding user to db

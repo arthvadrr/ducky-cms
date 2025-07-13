@@ -2,8 +2,7 @@
 /**
  * The initial setup page. The first page of the application.
  */
-
-namespace DuckyCMS\Layout;
+namespace DuckyCMS\SetupLayout;
 
 require_once '../../templates/layout.php';
 
