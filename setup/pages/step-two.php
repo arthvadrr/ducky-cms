@@ -9,11 +9,6 @@ session_start();
 if (!isset($_SESSION['db_path']) || !file_exists($_SESSION['db_path'])) {
   die('No valid database found. Please complete Step 1 first.');
 }
-/**
- * Page to set up DB user
- */
-
-namespace DuckyCMS\Layout;
 
 require_once '../../templates/layout.php';
 
