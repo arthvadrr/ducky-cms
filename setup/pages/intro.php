@@ -4,7 +4,7 @@
  */
 namespace DuckyCMS\SetupLayout;
 
-require_once '../../templates/layout.php';
+require_once '../../templates/admin-layout.php';
 
 $page_title = 'DuckyCMS Setup';
 

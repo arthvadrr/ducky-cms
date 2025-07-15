@@ -5,57 +5,77 @@
 
 namespace DuckyCMS\SetupLayout;
 
-require_once dirname(__DIR__, 2) . '/bootstrap.php';
-
 use PDO;
 use PDOException;
 
-require_once '../../templates/layout.php';
+/**
+ * Exit if not accessed directly.
+ */
+if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
+  exit('Nope.');
+}
 
 /**
- * We need to store the db name and future settings for later steps
+ * Includes
+ */
+require_once '../../bootstrap.php';
+require_once '../../templates/admin-layout.php';
+
+/**
+ * We need to store the db name and future settings for later steps.
  */
 session_start();
 
 /**
- * If for some reason the session has a db name that no longer exists, unset it
+ * If for some reason the session has a db name that no longer exists, unset it.
  */
 if (isset($_SESSION['db_path']) && !file_exists($_SESSION['db_path'])) {
   unset($_SESSION['db_path']);
 }
 
-$page_title = 'DuckyCMS Database Setup';
-$message    = '';
-
+$schema  = require DUCKY_ROOT . '/db/schema.php';
 
 /**
- * Handle db creation. Session is used to store the db name for the next step
+ * Handle db creation.
+ *
+ * @returns string $message
  */
-$schema = require DUCKY_ROOT . '/db/schema.php';
+function dcms_init_db(string $schema): string {
+  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    return '<p>Failed. Not a POST request.</p>';
+  }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $db_base = basename($_POST['db_name']);
+
+  if (!preg_match('/^[a-zA-Z0-9_-]+$/', $db_base)) {
+    return '<p>Invalid database name. Use only letters, numbers, dashes, or underscores.</p>';
+  }
+
   $db_name = $db_base . '.sqlite';
   $db_path = DUCKY_ROOT . "/db/$db_name";
 
   if (file_exists($db_path)) {
-    $message = '<p>Database file already exists. Choose a different name.</p>';
-  } else {
-    if (!file_exists(dirname($db_path))) {
-      mkdir(dirname($db_path), 0755, true);
-    }
+    return '<p>Database file already exists. Choose a different name.</p>';
+  }
 
-    try {
-      $db = new PDO("sqlite:$db_path");
-      $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-      $db->exec($schema);
-      $_SESSION['db_path'] = $db_path;
-      $message             = '<p>Database created successfully!</p><p><a href="step-two.php">Continue to Step 2</a></p>';
-    } catch (PDOException $error) {
-      $message = '<p>Error: ' . htmlspecialchars($error->getMessage()) . '</p>';
+  if (!file_exists(dirname($db_path))) {
+    if (!mkdir(dirname($db_path), 0755, true) && !is_dir(dirname($db_path))) {
+      return '<p>Failed to create database directory.</p>';
     }
   }
+
+  try {
+    $db = new PDO("sqlite:$db_path");
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $db->exec($schema);
+    $_SESSION['db_path'] = $db_path;
+    return '<p>Database created successfully!</p><p><a href="step-two.php">Continue to Step 2</a></p>';
+  } catch (PDOException $error) {
+    return '<p>Error: ' . htmlspecialchars($error->getMessage()) . '</p>';
+  }
 }
+
+$message = dcms_init_db($schema);
 
 ob_start();
 ?>
@@ -70,7 +90,4 @@ ob_start();
     </form>
     <?php if (!empty($message)) echo $message; ?>
   </section>
-  <?php
-
-render_layout($page_title, ob_get_clean());
-?>
+  <?php render_layout('DuckyCMS Database Setup', ob_get_clean()); ?>
