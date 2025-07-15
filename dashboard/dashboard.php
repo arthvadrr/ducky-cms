@@ -1,10 +1,16 @@
 <?php
-namespace DuckyCMS\SetupLayout;
+namespace DuckyCMS\Setup;
+
+use function DuckyCMS\dcms_get_base_url;
 
 session_start();
 
 if (!isset($_SESSION['user'])) {
-  header('Location: /auth/login.php');
+  if (!defined('DUCKY_ROOT')) {
+    define('DUCKY_ROOT', dirname(__DIR__));
+  }
+  require_once DUCKY_ROOT . '/includes/functions.php';
+  header('Location: ' . dcms_get_base_url() . 'auth/login.php');
   exit;
 }
 

@@ -1,12 +1,15 @@
 <?php
 /**
  * This file is step one of the setup. It inits the DB.
+ *
+ * TODO remove form if db successfully created or navigate to next
  */
 
-namespace DuckyCMS\SetupLayout;
+namespace DuckyCMS\Setup;
 
 use PDO;
 use PDOException;
+use function DuckyCMS\dcms_get_base_url;
 
 /**
  * Exit if not accessed directly.
@@ -15,11 +18,9 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
   exit('Nope.');
 }
 
-/**
- * Includes
- */
-require_once '../../bootstrap.php';
-require_once '../../templates/admin-layout.php';
+require_once dirname(__DIR__, 2) . '/bootstrap.php';
+require_once DUCKY_ROOT . '/includes/functions.php';
+require_once DUCKY_ROOT . '/templates/admin-layout.php';
 
 /**
  * We need to store the db name and future settings for later steps.
@@ -33,16 +34,19 @@ if (isset($_SESSION['db_path']) && !file_exists($_SESSION['db_path'])) {
   unset($_SESSION['db_path']);
 }
 
-$schema  = require DUCKY_ROOT . '/db/schema.php';
+$schema = require_once DUCKY_ROOT . '/db/schema.php';
 
 /**
  * Handle db creation.
  *
  * @returns string $message
  */
-function dcms_init_db(string $schema): string {
-  if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    return '<p>Failed. Not a POST request.</p>';
+function dcms_init_db(string $schema): string
+{
+  $request_method = $_SERVER['REQUEST_METHOD'] ?? '';
+
+  if ($request_method !== 'POST') {
+    return '';
   }
 
   $db_base = basename($_POST['db_name']);
@@ -69,7 +73,9 @@ function dcms_init_db(string $schema): string {
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $db->exec($schema);
     $_SESSION['db_path'] = $db_path;
-    return '<p>Database created successfully!</p><p><a href="step-two.php">Continue to Step 2</a></p>';
+    $step_two_url = dcms_get_base_url() . 'setup/pages/step-two.php';
+
+    return '<p>Database created successfully! <a href="' . $step_two_url . '">Continue to Step 2</a>.</p>';
   } catch (PDOException $error) {
     return '<p>Error: ' . htmlspecialchars($error->getMessage()) . '</p>';
   }
@@ -90,4 +96,5 @@ ob_start();
     </form>
     <?php if (!empty($message)) echo $message; ?>
   </section>
+
   <?php render_layout('DuckyCMS Database Setup', ob_get_clean()); ?>

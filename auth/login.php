@@ -1,9 +1,10 @@
 <?php
 
-namespace DuckyCMS\SetupLayout;
+namespace DuckyCMS\Setup;
 
 use PDO;
 use PDOException;
+use function DuckyCMS\dcms_get_base_url;
 
 /**
  * Exit if not accessed directly
@@ -16,6 +17,7 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
  * Includes
  */
 require_once '../bootstrap.php';
+require_once '../includes/functions.php';
 require_once '../templates/admin-layout.php';
 
 session_start();
@@ -49,7 +51,7 @@ function handle_login(): string {
 
     if ($user && password_verify($password, $user['password'])) {
       $_SESSION['user'] = $user['username'];
-      header('Location: /dashboard/dashboard.php');
+      header('Location: ' . dcms_get_base_url() . 'dashboard/dashboard.php');
       exit;
     }
 

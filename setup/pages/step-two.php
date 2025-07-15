@@ -1,12 +1,13 @@
 <?php
 /**
- * This file is step two of the setup. It inits the DB.
+ * This file is step two of the setup. It creates the admin user.
  */
 
-namespace DuckyCMS\SetupLayout;
+namespace DuckyCMS\Setup;
 
 use PDO;
 use PDOException;
+use function DuckyCMS\dcms_get_base_url;
 
 /**
  * Exit if not accessed directly.
@@ -15,11 +16,9 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
   exit('Nope.');
 }
 
-/**
- * Includes
- */
-require_once '../../bootstrap.php';
-require_once '../../templates/admin-layout.php';
+require_once dirname(__DIR__, 2) . '/bootstrap.php';
+require_once DUCKY_ROOT . '/templates/admin-layout.php';
+require_once DUCKY_ROOT . '/includes/functions.php';
 
 /**
  * Make session available if it exists and make sure we have a db path from step 1.
@@ -30,7 +29,6 @@ if (!isset($_SESSION['db_path']) || !file_exists($_SESSION['db_path'])) {
   die('No valid database found. Please complete Step 1 first.');
 }
 
-
 /**
  * Handle adding the admin user to the db.
  *
@@ -39,7 +37,7 @@ if (!isset($_SESSION['db_path']) || !file_exists($_SESSION['db_path'])) {
 function dcms_create_admin_user(): string
 {
   if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    return '<p>Failed. Not a POST request.</p>';
+    return '';
   }
 
   $username = trim($_POST['username']);
@@ -76,7 +74,10 @@ function dcms_create_admin_user(): string
 
   try {
     $stmt->execute([':username' => $username, ':password' => $hashed_password]);
-    return '<p>User created successfully! <a href="/auth/login.php">Login to DuckyCMS</a>.</p>';
+
+    $base_url = dcms_get_base_url();
+    header('Location: ' . $base_url . 'auth/login.php');
+    exit;
   } catch (PDOException $error) {
     return '<p>Error creating user: ' . htmlspecialchars($error->getMessage()) . '</p>';
   }
@@ -91,11 +92,12 @@ ob_start();
     <p>Pick a username and password.</p>
     <form method="post">
       <label for="username">Username:</label>
-      <input id="username" name="username" type="text" placeholder="ducky_admin" required>
-      <label for="password">Password:</label>
+      <input id="username" name="username" type="text" placeholder="ducky_admin" autocomplete="off" required>
+      <label for="password">Password (password manager recommended!):</label>
       <input id="password" name="password" type="password" placeholder="••••••••••••" autocomplete="off" required>
       <button type="submit">Create User</button>
     </form>
     <?php if (!empty($message)) echo '<div class="message">' . $message . '</div>'; ?>
   </section>
+
   <?php render_layout('DuckyCMS Create Admin User', ob_get_clean()); ?>
