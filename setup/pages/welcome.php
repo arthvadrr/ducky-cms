@@ -13,9 +13,9 @@ use function DuckyCMS\dcms_db_exists;
 use function DuckyCMS\dcms_get_base_url;
 
 $has_db       = dcms_db_exists();
-$base_url = dcms_get_base_url();
-$step_one_url = $base_url . 'setup/pages/step-one.php';
-$login_url    = $base_url . 'auth/login.php';
+$base_url      = dcms_get_base_url();
+$create_db_url = $base_url . 'setup/pages/create-database.php';
+$login_url     = $base_url . 'auth/login.php';
 
 ob_start();
 ?>
@@ -31,8 +31,9 @@ ob_start();
       <p>
         If you want to create a new database, delete the current one and return to this page.
       </p>
+    <?php else: ?>
+      <a href="<?= $create_db_url; ?>">Let’s Begin 🐣</a>
     <?php endif; ?>
-    <a href="<?= $step_one_url; ?>">Let’s Begin 🐣</a>
   </section>
 
   <?php render_layout('DuckyCMS Setup', ob_get_clean()); ?>

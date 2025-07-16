@@ -7,7 +7,6 @@ namespace DuckyCMS\Setup;
 
 use PDO;
 use PDOException;
-use function DuckyCMS\dcms_db_exists;
 use function DuckyCMS\dcms_get_base_url;
 
 /**
@@ -15,14 +14,6 @@ use function DuckyCMS\dcms_get_base_url;
  */
 if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
   exit('Nope.');
-}
-
-/**
- * If we already have a database, redirect to login
- */
-if (dcms_db_exists()) {
-  header('Location: ' . dcms_get_base_url() . 'auth/login.php');
-  exit();
 }
 
 require_once dirname(__DIR__, 2) . '/bootstrap.php';
@@ -34,8 +25,24 @@ require_once DUCKY_ROOT . '/includes/functions.php';
  */
 session_start();
 
-if (!isset($_SESSION['db_path']) || !file_exists($_SESSION['db_path'])) {
-  die('No valid database found. Please complete Step 1 first.');
+$db_path = $_SESSION['db_path'] ?? null;
+$nonce   = $_SESSION['setup_nonce'] ?? null;
+
+if (!$db_path || !$nonce || !file_exists($db_path)) {
+  header('Location: ' . dcms_get_base_url() . 'auth/login.php');
+  exit;
+}
+
+$pdo = new PDO('sqlite:' . $db_path);
+$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+$stmt = $pdo->prepare("SELECT token, created_at, used FROM setup_nonce WHERE token = :token LIMIT 1");
+$stmt->execute([':token' => $nonce]);
+$row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$row || $row['used'] || $row['created_at'] < (time() - 86400)) {
+  header('Location: ' . dcms_get_base_url() . 'auth/login.php');
+  exit;
 }
 
 /**
@@ -64,14 +71,7 @@ function dcms_create_admin_user(): string
     return '<p>Password must be at least 12 characters for security.</p>';
   }
 
-  $db_path = $_SESSION['db_path'];
-
-  if (!file_exists($db_path)) {
-    die('Database not found.');
-  }
-
-  $pdo = new PDO('sqlite:' . $db_path);
-  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  global $pdo, $nonce;
 
   $user_insert = "
       INSERT INTO users (username, password) 
@@ -83,6 +83,7 @@ function dcms_create_admin_user(): string
 
   try {
     $stmt->execute([':username' => $username, ':password' => $hashed_password]);
+    $pdo->exec("UPDATE setup_nonce SET used = 1 WHERE token = " . $pdo->quote($nonce));
     $base_url = dcms_get_base_url();
     header('Location: ' . $base_url . 'auth/login.php');
     exit;
@@ -96,12 +97,12 @@ $message = dcms_create_admin_user();
 ob_start();
 ?>
   <section>
-    <h2>Step 2: Create Admin User</h2>
+    <h2>Create Admin User</h2>
     <p>Pick a username and password.</p>
     <form method="post">
-      <label for="username">Username:</label>
+      <label for="username">Username</label>
       <input id="username" name="username" type="text" placeholder="ducky_admin" autocomplete="off" required>
-      <label for="password">Password (password manager recommended!):</label>
+      <label for="password">Password</label>
       <input id="password" name="password" type="password" placeholder="••••••••••••" autocomplete="off" required>
       <button type="submit">Create User</button>
     </form>
