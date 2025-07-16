@@ -20,6 +20,6 @@ if (
   !str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/setup/')
 ) {
   require_once DUCKY_ROOT . '/includes/functions.php';
-  header('Location: ' . dcms_get_base_url() . 'setup/pages/intro.php');
+  header('Location: ' . dcms_get_base_url() . 'setup/pages/welcome.php');
   exit;
 }

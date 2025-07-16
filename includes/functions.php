@@ -17,5 +17,5 @@ function dcms_get_base_url(): string {
 }
 
 function dcms_db_exists(): bool {
-  return !empty( glob(DUCKY_ROOT . 'db/*.sqlite') );
+  return !empty( glob(DUCKY_ROOT . '/db/*.sqlite') );
 }
