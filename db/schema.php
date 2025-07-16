@@ -51,4 +51,10 @@ CREATE TABLE IF NOT EXISTS menu_items (
   FOREIGN KEY (menu_id) REFERENCES menus(id),
   FOREIGN KEY (page_id) REFERENCES pages(id)
 );
+
+CREATE TABLE IF NOT EXISTS setup_nonce (
+  token TEXT,
+  created_at INTEGER,
+  used INTEGER DEFAULT 0
+);
 ";
