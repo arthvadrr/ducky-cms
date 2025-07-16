@@ -7,6 +7,7 @@ namespace DuckyCMS\Setup;
 
 use PDO;
 use PDOException;
+use function DuckyCMS\dcms_db_exists;
 use function DuckyCMS\dcms_get_base_url;
 
 /**
@@ -14,6 +15,14 @@ use function DuckyCMS\dcms_get_base_url;
  */
 if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
   exit('Nope.');
+}
+
+/**
+ * If we already have a database, redirect to login
+ */
+if (dcms_db_exists()) {
+  header('Location: ' . dcms_get_base_url() . 'auth/login.php');
+  exit();
 }
 
 require_once dirname(__DIR__, 2) . '/bootstrap.php';
@@ -74,7 +83,6 @@ function dcms_create_admin_user(): string
 
   try {
     $stmt->execute([':username' => $username, ':password' => $hashed_password]);
-
     $base_url = dcms_get_base_url();
     header('Location: ' . $base_url . 'auth/login.php');
     exit;
