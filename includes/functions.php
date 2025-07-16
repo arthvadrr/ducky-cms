@@ -15,3 +15,7 @@ function dcms_get_base_url(): string {
 
   return "$protocol://$host/";
 }
+
+function dcms_db_exists(): bool {
+  return !empty( glob(DUCKY_ROOT . 'db/*.sqlite') );
+}
