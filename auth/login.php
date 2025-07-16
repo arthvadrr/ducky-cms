@@ -21,12 +21,15 @@ require_once '../includes/functions.php';
 require_once '../templates/admin-layout.php';
 
 session_start();
+session_regenerate_id(true);
 
 /**
  * Handle POST login, returns message
  * @return string
+ * @throws
  */
-function handle_login(): string {
+function handle_login(): string
+{
   $request_method = $_SERVER['REQUEST_METHOD'] ?? '';
 
   if ($request_method !== 'POST') {
@@ -50,7 +53,18 @@ function handle_login(): string {
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if ($user && password_verify($password, $user['password'])) {
-      $_SESSION['user'] = $user['username'];
+      $token = bin2hex(random_bytes(32));
+      $stmt = $pdo->prepare("UPDATE users SET session_token = :token, token_created_at = :created_at WHERE id = :id");
+      $stmt->execute([
+        ':token' => $token,
+        ':created_at' => time(),
+        ':id' => $user['id']
+      ]);
+
+      $_SESSION['username'] = $user['username'];
+      $_SESSION['user_id'] = $user['id'];
+      $_SESSION['session_token'] = $token;
+
       header('Location: ' . dcms_get_base_url() . 'dashboard/dashboard.php');
       exit;
     }
