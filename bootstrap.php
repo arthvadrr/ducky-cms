@@ -3,11 +3,14 @@
  * Define root path
  */
 
-use function DuckyCMS\dcms_get_base_url;
-
 if (!defined('DUCKY_ROOT')) {
   define('DUCKY_ROOT', realpath(__DIR__));
 }
+
+use function DuckyCMS\dcms_db_exists;
+use function DuckyCMS\dcms_get_base_url;
+
+require_once DUCKY_ROOT . '/includes/functions.php';
 
 /**
  * If we don't have a DB then redirect to setup (unles we're in CLI)
@@ -16,7 +19,7 @@ if (!defined('DUCKY_ROOT')) {
  */
 if (
   PHP_SAPI !== 'cli' &&
-  !file_exists(DUCKY_ROOT . '/db/ducky.sqlite') &&
+  !dcms_db_exists() &&
   !str_starts_with($_SERVER['REQUEST_URI'] ?? '', '/setup/')
 ) {
   require_once DUCKY_ROOT . '/includes/functions.php';
