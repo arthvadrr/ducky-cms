@@ -3,8 +3,10 @@
 namespace DuckyCMS\Setup;
 
 include_once '../includes/functions.php';
+require_once '../db/interface.php';
 
-use PDO;
+use PDOException;
+use function DuckyCMS\DB\get_user_session_token;
 use function DuckyCMS\dcms_get_base_url;
 
 session_start();
@@ -23,14 +25,16 @@ if (!defined('DUCKY_ROOT')) {
   define('DUCKY_ROOT', dirname(__DIR__));
 }
 
-$pdo  = new PDO('sqlite:' . DUCKY_ROOT . '/db/ducky.sqlite');
-$stmt = $pdo->prepare("SELECT session_token FROM users WHERE id = :id");
-$stmt->execute([':id' => $_SESSION['user_id']]);
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
+try {
+  $session_token = get_user_session_token($_SESSION['user_id']);
 
-if (!$user || $user['session_token'] !== $_SESSION['session_token']) {
+  if (!$session_token || $session_token !== $_SESSION['session_token']) {
+    header('Location: ' . dcms_get_base_url() . 'auth/login.php');
+    exit;
+  }
+} catch (PDOException $e) {
   header('Location: ' . dcms_get_base_url() . 'auth/login.php');
-  exit;
+  exit($e);
 }
 
 require_once DUCKY_ROOT . '/templates/admin-layout.php';
