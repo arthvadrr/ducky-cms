@@ -10,18 +10,24 @@ use function DuckyCMS\dcms_get_base_url;
 
 session_start();
 
-$message = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['site_url'])) {
-  $url = trim($_POST['site_url']);
+function dcms_handle_site_url_update(): string
+{
+  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['site_url'])) {
+    $url = trim($_POST['site_url']);
 
-  try {
-    set_setting('site_url', $url);
-    $message = '<p>Site URL saved successfully! <a href="' . dcms_get_base_url() . 'setup/pages/create-admin-user.php">Continue to Create Admin User</a>.</p>';
-  } catch (PDOException $e) {
-    $message = '<p style="color: red;">Error saving site URL: ' . htmlspecialchars($e->getMessage()) . '</p>';
+    try {
+      set_setting('site_url', $url);
+      return '<p>Site URL saved successfully! <a href="' . dcms_get_base_url() . 'setup/pages/create-admin-user.php">Continue to Create Admin User</a>.</p>';
+    } catch (PDOException $e) {
+      return '<p style="color: red;">Error saving site URL: ' . htmlspecialchars($e->getMessage()) . '</p>';
+    }
   }
+
+  return '';
 }
+
+$message = dcms_handle_site_url_update();
 
 try {
   $site_url = get_setting('site_url');
