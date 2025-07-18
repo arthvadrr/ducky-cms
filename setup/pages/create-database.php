@@ -7,9 +7,10 @@
 
 namespace DuckyCMS\Setup;
 
-use PDO;
 use PDOException;
 use Random\RandomException;
+use function DuckyCMS\DB\create_setup_nonce;
+use function DuckyCMS\DB\initialize_database;
 use function DuckyCMS\dcms_db_exists;
 use function DuckyCMS\dcms_get_base_url;
 
@@ -25,6 +26,7 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
 require_once dirname(__DIR__, 2) . '/bootstrap.php';
 require_once DUCKY_ROOT . '/includes/functions.php';
 require_once DUCKY_ROOT . '/templates/admin-layout.php';
+require_once DUCKY_ROOT . '/db/interface.php';
 
 /**
  * If we already have a database, redirect to login
@@ -86,9 +88,7 @@ function dcms_init_db(string $schema): string
   }
 
   try {
-    $db = new PDO("sqlite:$db_path");
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $db->exec($schema);
+    initialize_database($schema, $db_path);
 
     /**
      * Save a nonce to the DB and the user's session.
@@ -97,13 +97,8 @@ function dcms_init_db(string $schema): string
     try {
       $nonce      = bin2hex(random_bytes(32));
       $created_at = time();
-      $stmt       = $db->prepare("INSERT INTO setup_nonce (token, created_at, used) VALUES (:token, :created_at, :used)");
 
-      $stmt->execute([
-        ':token'      => $nonce,
-        ':created_at' => $created_at,
-        ':used'       => NONCE_INITIAL_USED_STATE
-      ]);
+      create_setup_nonce($nonce, $created_at, NONCE_INITIAL_USED_STATE, $db_path);
 
       $_SESSION['setup_nonce'] = $nonce;
       $_SESSION['db_path']     = $db_path;
@@ -111,11 +106,11 @@ function dcms_init_db(string $schema): string
       return "<p>$error</p>";
     }
 
-    $create_admin_user_url = dcms_get_base_url() . 'setup/pages/create-admin-user.php';
+    $set_site_domain_url = dcms_get_base_url() . 'setup/pages/set-site-domain.php';
 
-    return '<p>Database created successfully! <a href="' . $create_admin_user_url . '">Continue to Create Admin User</a>.</p>';
-  } catch (PDOException $error) {
-    return '<p>Error: ' . htmlspecialchars($error->getMessage()) . '</p>';
+    return '<p>Database created successfully! <a href="' . $set_site_domain_url . '">Continue to Set Site URL</a>.</p>';
+  } catch (PDOException $e) {
+    return '<p>Error: ' . htmlspecialchars($e->getMessage()) . '</p>';
   }
 }
 
@@ -136,5 +131,5 @@ ob_start();
     <?php endif;
     if (!empty($message)) echo $message; ?>
   </section>
-
-  <?php render_layout('DuckyCMS Database Setup', ob_get_clean()); ?>
+  <?php
+render_layout('DuckyCMS Database Setup', ob_get_clean());

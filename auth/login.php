@@ -2,8 +2,9 @@
 
 namespace DuckyCMS\Setup;
 
-use PDO;
 use PDOException;
+use function DuckyCMS\DB\get_user_by_username;
+use function DuckyCMS\DB\update_user_session_token;
 use function DuckyCMS\dcms_get_base_url;
 
 /**
@@ -19,12 +20,14 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
 require_once '../bootstrap.php';
 require_once '../includes/functions.php';
 require_once '../templates/admin-layout.php';
+require_once '../db/interface.php';
 
 session_start();
 session_regenerate_id(true);
 
 /**
  * Handle POST login, returns message
+ *
  * @return string
  * @throws
  */
@@ -45,21 +48,13 @@ function handle_login(): string
   }
 
   try {
-    $pdo = new PDO('sqlite:' . $db_path);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    $stmt = $pdo->prepare('SELECT * FROM users WHERE username = :username');
-    $stmt->execute([':username' => $username]);
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $user = get_user_by_username($username, $db_path);
 
     if ($user && password_verify($password, $user['password'])) {
       $token = bin2hex(random_bytes(32));
-      $stmt = $pdo->prepare("UPDATE users SET session_token = :token, token_created_at = :created_at WHERE id = :id");
-      $stmt->execute([
-        ':token' => $token,
-        ':created_at' => time(),
-        ':id' => $user['id']
-      ]);
+      $created_at = time();
+      
+      update_user_session_token($user['id'], $token, $created_at, $db_path);
 
       $_SESSION['username'] = $user['username'];
       $_SESSION['user_id'] = $user['id'];
