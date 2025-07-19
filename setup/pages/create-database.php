@@ -27,14 +27,8 @@ if (isset($_SESSION['db_path']) && !file_exists($_SESSION['db_path'])) {
 }
 
 function dcms_create_db(): string {
-  if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['db_name'])) {
-    $db_base = basename($_POST['db_name']);
-
-    if (!preg_match('/^[a-zA-Z0-9_-]+$/', $db_base)) {
-      return '<p>Invalid database name. Use only letters, numbers, dashes, or underscores.</p>';
-    }
-
-    $db_name = $db_base . '.sqlite';
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $db_name = 'ducky.sqlite';
     $db_path = DUCKY_ROOT . "/db/$db_name";
 
     if (file_exists($db_path)) {
@@ -60,7 +54,7 @@ function dcms_create_db(): string {
         return '<p>Error: ' . htmlspecialchars($e->getMessage()) . '</p>';
       }
 
-      $next_url = dcms_get_base_url() . 'setup/pages/set-site-domain.php';
+      $next_url = dcms_get_base_url() . 'setup/pages/set-site-url.php';
       return '<p>Database created successfully! <a href="' . $next_url . '">Continue to Set Site URL</a>.</p>';
     } catch (PDOException $e) {
       return '<p>Error: ' . htmlspecialchars($e->getMessage()) . '</p>';
@@ -71,21 +65,22 @@ function dcms_create_db(): string {
 }
 
 $message = dcms_create_db();
+$set_site_url = dcms_get_base_url() . 'setup/pages/set-site-url.php';
 
 ob_start();
 ?>
   <section>
-    <h2>Step 1: Create SQLite Database</h2>
-    <?= $message ?>
-    <p>We'll generate a lightweight SQLite DB to store your site content. Just pick a name.</p>
+    <h2>Create SQLite Database</h2>
+    <p>This will generate a lightweight SQLite DB named <code>ducky.sqlite</code> to store your site content.</p>
     <?php if (!dcms_db_exists()) : ?>
       <form method="post">
-        <label for="db-name">Database File Name:</label>
-        <input id="db-name" name="db_name" type="text" placeholder="ducky" required>
-        <span>.sqlite</span>
         <button type="submit">Create Database</button>
       </form>
     <?php endif; ?>
+    <?= $message ?>
+    <?php if (dcms_db_exists() && empty($message)) : ?>
+      <p>Database exists. <a href="<?= dcms_get_base_url() . $set_site_url ?>">Continue to Set Site URL</a>.</p>
+    <?php endif; ?>
   </section>
   <?php
-render_layout('DuckyCMS Database Setup', ob_get_clean());
+render_layout('DuckyCMS Setup', ob_get_clean());
