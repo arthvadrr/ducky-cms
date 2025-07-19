@@ -39,7 +39,7 @@ function handle_login(): string
     return '';
   }
 
-  $username = $_POST['email'] ?? '';
+  $username = $_POST['username'] ?? '';
   $password = $_POST['password'] ?? '';
   $db_path  = DUCKY_ROOT . '/db/ducky.sqlite';
 
@@ -74,11 +74,10 @@ $message = handle_login();
 
 ob_start();
 ?>
-  <h2>Login</h2>
   <form method="post">
-    <label for="email">Email:</label><input id="email" name="email" type="text" required><br>
+    <label for="username">Username:</label><input id="username" name="username" type="text" required><br>
     <label for="password">Password:</label><input id="password" name="password" type="password" required><br>
     <button>Log In</button>
   </form>
   <?php if (!empty($message)) echo $message; ?>
-  <?php render_layout("Login to DuckyCMS", ob_get_clean()); ?>
+  <?php render_layout("DuckyCMS Login", ob_get_clean()); ?>

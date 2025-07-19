@@ -106,4 +106,4 @@ ob_start();
     <?php if (!empty($message)) echo '<div class="message">' . $message . '</div>'; ?>
   </section>
   <?php
-render_layout('DuckyCMS Create Admin User', ob_get_clean());
+render_layout('DuckyCMS Setup', ob_get_clean());
