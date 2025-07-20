@@ -30,3 +30,35 @@ Schema is in `db/schema.php`
 - `auth/` – login/logout
 - `dashboard/` – admin UI
 - `includes/` – shared functions
+
+## TODO Overview
+
+### Core
+- [ ] Page Editor (title, slug, HTML)
+- [ ] Save and render Pages
+- [ ] Sections system (reusable HTML blocks)
+- [ ] Section insert support in Page HTML
+- [ ] Global Meta fields (site-wide settings)
+- [ ] Per-Page Meta fields (custom page data)
+
+### 📦 Content
+- [ ] Content Types (formerly “custom types”)
+- [ ] Data Lists (repeaters for Content Types)
+- [ ] List tag renderer (e.g. <data-list type="events" />)
+
+### 🖥️ Admin UI
+- [ ] Admin UI for managing Pages, Types, and Lists
+- [ ] Syntax highlighting (CodeMirror or similar)
+- [ ] Optional page preview
+- [ ] Admin Styles
+
+### Security
+- [ ] Better session/auth security (expiration, rotation)
+
+### Fallbacks
+- [ ] 404 page and routing fallback
+- [ ] Static site export (maybe)
+- [ ] Caching (static)
+
+### Setup
+- [ ] Setup Styles
