@@ -26,11 +26,6 @@ function dcms_db_exists(): bool {
   return !empty( glob(DUCKY_ROOT . '/db/*.sqlite') );
 }
 
-function dcms_get_db_path(): ?string {
-  $files = glob(DUCKY_ROOT . '/db/*.sqlite');
-  return $files[0] ?? null;
-}
-
 /**
  * Get the user set URL
  *

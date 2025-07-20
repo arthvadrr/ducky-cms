@@ -62,19 +62,22 @@ function fetch_single(string $query, array $params = [], ?string $db_path = null
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
+// =============================================================================
+// PAGE MANAGEMENT FUNCTIONS
+// =============================================================================
+
 /**
- * Execute a query and return all rows
- * 
- * @param string $query SQL query
- * @param array $params Parameters for the query
- * @param string|null $db_path Optional database path
+ * Get all pages
+ *
+ * @param string|null $db_path
  * @return array
  * @throws PDOException
  */
-function fetch_all(string $query, array $params = [], ?string $db_path = null): array
+function dcms_get_all_pages(?string $db_path = null): array
 {
-    $stmt = execute_query($query, $params, $db_path);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $query = "SELECT id, title, slug FROM pages ORDER BY id";
+  $stmt = execute_query($query, [], $db_path);
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
 // =============================================================================
@@ -93,20 +96,6 @@ function get_user_by_username(string $username, ?string $db_path = null): array|
 {
     $query = 'SELECT * FROM users WHERE username = :username';
     return fetch_single($query, [':username' => $username], $db_path);
-}
-
-/**
- * Get user by ID
- * 
- * @param int $user_id
- * @param string|null $db_path
- * @return array|false
- * @throws PDOException
- */
-function get_user_by_id(int $user_id, ?string $db_path = null): array|false
-{
-    $query = 'SELECT * FROM users WHERE id = :id';
-    return fetch_single($query, [':id' => $user_id], $db_path);
 }
 
 /**
