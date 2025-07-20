@@ -41,12 +41,12 @@ Schema is in `db/schema.php`
 - [ ] Global Meta fields (site-wide settings)
 - [ ] Per-Page Meta fields (custom page data)
 
-### 📦 Content
+### Content
 - [ ] Content Types (formerly “custom types”)
 - [ ] Data Lists (repeaters for Content Types)
 - [ ] List tag renderer (e.g. <data-list type="events" />)
 
-### 🖥️ Admin UI
+### Admin UI
 - [ ] Admin UI for managing Pages, Types, and Lists
 - [ ] Syntax highlighting (CodeMirror or similar)
 - [ ] Optional page preview
