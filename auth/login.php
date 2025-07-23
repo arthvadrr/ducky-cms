@@ -23,7 +23,6 @@ require_once '../templates/admin-layout.php';
 require_once '../db/interface.php';
 
 session_start();
-session_regenerate_id(true);
 
 /**
  * Handle POST login, returns message
@@ -51,6 +50,7 @@ function handle_login(): string
     $user = get_user_by_username($username, $db_path);
 
     if ($user && password_verify($password, $user['password'])) {
+      session_regenerate_id(true);
       $token = bin2hex(random_bytes(32));
       $created_at = time();
       
@@ -60,7 +60,7 @@ function handle_login(): string
       $_SESSION['user_id'] = $user['id'];
       $_SESSION['session_token'] = $token;
 
-      header('Location: ' . dcms_get_base_url() . 'dashboard/dashboard.php');
+      header('Location: ' . dcms_get_base_url() . 'dashboard/index.php');
       exit;
     }
 
