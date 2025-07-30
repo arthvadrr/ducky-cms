@@ -17,7 +17,7 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
 
 require_once dirname(__DIR__, 2) . '/bootstrap.php';
 require_once DUCKY_ROOT . '/includes/functions.php';
-require_once DUCKY_ROOT . '/templates/admin-layout.php';
+require_once DUCKY_ROOT . '/templates/setup-layout.php';
 require_once DUCKY_ROOT . '/db/interface.php';
 
 session_start();
@@ -74,12 +74,12 @@ ob_start();
     <p>This will generate a lightweight SQLite DB named <code>ducky.sqlite</code> to store your site content.</p>
     <?php if (!dcms_db_exists()) : ?>
       <form method="post">
-        <button type="submit">Create Database</button>
+        <button class="button" type="submit">Create Database</button>
       </form>
     <?php endif; ?>
     <?= $message ?>
     <?php if (dcms_db_exists() && empty($message)) : ?>
-      <p>Database exists. <a href="<?= dcms_get_base_url() . $set_site_url ?>">Continue to Set Site URL</a>.</p>
+      <p>Database exists. <a class="button" href="<?= dcms_get_base_url() . $set_site_url ?>">Continue to Set Site URL</a>.</p>
     <?php endif; ?>
   </section>
   <?php

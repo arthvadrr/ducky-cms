@@ -19,7 +19,7 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
  */
 require_once '../bootstrap.php';
 require_once '../includes/functions.php';
-require_once '../templates/admin-layout.php';
+require_once '../templates/setup-layout.php';
 require_once '../db/interface.php';
 
 session_start();

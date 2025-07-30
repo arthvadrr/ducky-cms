@@ -1,7 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../../bootstrap.php';
-require_once DUCKY_ROOT . '/templates/admin-layout.php';
+require_once DUCKY_ROOT . '/templates/setup-layout.php';
 require_once DUCKY_ROOT . '/includes/functions.php';
 require_once DUCKY_ROOT . '/db/interface.php';
 

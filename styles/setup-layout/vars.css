@@ -1,0 +1,22 @@
+:root {
+  --font-body: Montserrat;
+  --font-heading: Montserrat;
+  --color-bg: #fff;
+  --color-text: #000;
+  --color-accent: #adadad;
+  --color-accent-hover: #005fa3;
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --border-radius: 4px;
+  --transition-fast: 0.2s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #222;
+    --color-text: #eee;
+    --color-accent-hover: #3399ff;
+  }
+}

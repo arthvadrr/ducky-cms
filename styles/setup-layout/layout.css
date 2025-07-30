@@ -1,0 +1,30 @@
+body {
+  font-family : "Montserrat", sans-serif;
+  color       : var(--color-text);
+  margin      : 0;
+
+  div.content {
+    display             : grid;
+    justify-content     : center;
+    align-content       : center;
+    min-height          : 100vh;
+    background-size     : 100% 100%;
+    background-color    : #23272d;
+    background-position : center;
+
+    div.content-inner {
+      position         : relative;
+      isolation        : isolate;
+      z-index          : 0;
+      border           : 1px solid #000;
+      background-color : #13161b;
+      padding          : 2rem;
+      max-width        : 75vw;
+
+      header, main, footer {
+        padding : 1rem;
+      }
+
+    }
+  }
+}

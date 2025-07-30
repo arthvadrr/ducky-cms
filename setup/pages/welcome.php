@@ -7,7 +7,7 @@ namespace DuckyCMS\Setup;
 
 require_once dirname(__DIR__, 2) . '/bootstrap.php';
 require_once DUCKY_ROOT . '/includes/functions.php';
-require_once DUCKY_ROOT . '/templates/admin-layout.php';
+require_once DUCKY_ROOT . '/templates/setup-layout.php';
 
 use function DuckyCMS\dcms_db_exists;
 use function DuckyCMS\dcms_get_base_url;
@@ -20,8 +20,6 @@ $login_url     = $base_url . 'auth/login.php';
 ob_start();
 ?>
   <section>
-    <h2>Welcome to DuckyCMS Setup</h2>
-
     <?php if ($has_db) : ?>
       <p>
         Looks like you already have a database.
@@ -32,8 +30,8 @@ ob_start();
       </p>
     <?php else: ?>
       <p>This little ducky needs your help getting started. Ready?</p>
-      <a href="<?= $create_db_url; ?>">Let’s Begin 🐣</a>
+      <a class="button" href="<?= $create_db_url; ?>">Let’s Begin 🐣</a>
     <?php endif; ?>
   </section>
 
-  <?php render_layout('DuckyCMS Setup', ob_get_clean()); ?>
+  <?php render_layout('Get Started', ob_get_clean()); ?>

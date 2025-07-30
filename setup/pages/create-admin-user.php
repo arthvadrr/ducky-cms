@@ -19,7 +19,7 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
 }
 
 require_once dirname(__DIR__, 2) . '/bootstrap.php';
-require_once DUCKY_ROOT . '/templates/admin-layout.php';
+require_once DUCKY_ROOT . '/templates/setup-layout.php';
 require_once DUCKY_ROOT . '/includes/functions.php';
 require_once DUCKY_ROOT . '/db/interface.php';
 
