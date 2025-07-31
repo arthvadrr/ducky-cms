@@ -70,7 +70,6 @@ $set_site_url = dcms_get_base_url() . 'setup/pages/set-site-url.php';
 ob_start();
 ?>
   <section>
-    <h2>Create SQLite Database</h2>
     <p>This will generate a lightweight SQLite DB named <code>ducky.sqlite</code> to store your site content.</p>
     <?php if (!dcms_db_exists()) : ?>
       <form method="post">
@@ -83,4 +82,4 @@ ob_start();
     <?php endif; ?>
   </section>
   <?php
-render_layout('DuckyCMS Setup', ob_get_clean());
+render_layout('Create SQLite Database', ob_get_clean());

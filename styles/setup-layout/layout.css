@@ -13,6 +13,8 @@ body {
     background-position : center;
 
     div.content-inner {
+      display          : grid;
+      gap              : 1rem;
       position         : relative;
       isolation        : isolate;
       z-index          : 0;
@@ -20,11 +22,10 @@ body {
       background-color : #13161b;
       padding          : 2rem;
       max-width        : 75vw;
+    }
 
-      header, main, footer {
-        padding : 1rem;
-      }
-
+    footer {
+      margin-top: 0.5rem;
     }
   }
 }

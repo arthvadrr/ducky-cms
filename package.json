@@ -1,0 +1,16 @@
+{
+  "name": "ducky-css",
+  "version": "1.0.0",
+  "description": "A simple CMS",
+  "type": "module",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "sh -c 'trap \"pkill -f \\\"php -S localhost:5173\\\"\" EXIT; concurrently \"rollup -c -w\" \"php -S localhost:5173\"'"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "postcss-import": "^16.1.1",
+    "rollup": "^4.46.2",
+    "rollup-plugin-postcss": "^4.0.2"
+  }
+}
