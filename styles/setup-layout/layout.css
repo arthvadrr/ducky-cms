@@ -1,6 +1,6 @@
 body {
   font-family : "Montserrat", sans-serif;
-  color       : var(--color-text);
+  color       : var(--color-gray-light);
   margin      : 0;
 
   p {
@@ -18,7 +18,7 @@ body {
     align-content       : center;
     min-height          : 100vh;
     background-size     : 100% 100%;
-    background-color    : #23272d;
+    background-color    : var(--color-bg-medium);
     background-position : center;
     text-align          : center;
 
@@ -30,8 +30,8 @@ body {
       min-height       : 600px;
       isolation        : isolate;
       z-index          : 0;
-      border           : 1px solid #000;
-      background-color : #13161b;
+      border           : 1px solid var(--color-border);
+      background-color : var(--color-bg-dark);
       padding          : 2rem;
       max-width        : 75vw;
     }

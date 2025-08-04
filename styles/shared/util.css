@@ -4,8 +4,8 @@
   display          : inline-block;
   padding          : 1rem 1.5rem;
   font-size        : clamp(1rem, 2vw, 1rem);
-  background-color : #ccc;
-  color            : #000;
+  background-color : var(--color-gray-light);
+  color            : var(--color-text);
   font-weight      : 800;
   text-decoration  : none;
   transition       : background-image 0.3s ease, outline-color 0.3s ease, outline-width 0.3s ease;
@@ -14,15 +14,15 @@
   border: 0;
 
   &.outline {
-    border: 2px solid #ccc;
-    color : #ccc;
+    border: 2px solid var(--color-gray-light);
+    color : var(--color-gray-light);
     background-color: transparent;
 
     &:hover,
     &:focus,
     &:active {
-      color: #000;
-      border-color: #00FFB2;
+      color: var(--color-text);
+      border-color: var(--color-accent-primary);
     }
   }
 
@@ -34,12 +34,12 @@
   &:hover,
   &:focus,
   &:active {
-    background-color: #00ffb2;
-    box-shadow       : 0 0 20px #00ffb233;
-    color            : #000;
+    background-color: var(--color-accent-primary);
+    box-shadow       : 0 0 20px var(--color-accent-primary-alpha);
+    color            : var(--color-text);
   }
 
   &:focus {
-    outline : 0.5rem solid #00ffb233;
+    outline : 0.5rem solid var(--color-accent-primary-alpha);
   }
 }
