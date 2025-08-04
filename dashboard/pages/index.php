@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../../bootstrap.php';
 require_once DUCKY_ROOT . '/db/interface.php';
 require_once DUCKY_ROOT . '/includes/functions.php';
-require_once DUCKY_ROOT . '/templates/admin-layout.php';
+require_once DUCKY_ROOT . '/templates/setup-layout.php';
 
 use function DuckyCMS\dcms_get_base_url;
 use function DuckyCMS\DB\dcms_get_all_pages;

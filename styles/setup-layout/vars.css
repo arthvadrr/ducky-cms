@@ -1,0 +1,41 @@
+:root {
+  --font-body: Montserrat;
+  --font-heading: Montserrat;
+  
+  /* Primary Colors */
+  --color-bg: #fff;
+  --color-text: #000;
+  
+  /* Accent Colors */
+  --color-accent-primary: #00ffb2;
+  --color-accent-primary-alpha: rgba(0, 255, 178, 0.2);
+  --color-accent-hover: #005fa3;
+  
+  /* Brand Colors */
+  --color-brand-orange-dark: #d9803d;
+  --color-brand-orange: #E87927;
+  --color-brand-yellow: #E8BD3B;
+  --color-brand-beige: #e1c69d;
+  
+  /* Neutral Colors */
+  --color-gray-light: #ccc;
+  --color-gray-medium: #444;
+  --color-gray-dark: #111;
+  --color-text-light: #f0f0f0;
+  
+  /* Background Colors */
+  --color-bg-dark: #13161b;
+  --color-bg-medium: #23272d;
+  --color-bg-form-dark: #2b2d31;
+  
+  /* Border Colors */
+  --color-border: #000;
+  --color-border-dark: #444;
+  
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 2rem;
+  --border-radius: 4px;
+  --transition-fast: 0.2s ease;
+}

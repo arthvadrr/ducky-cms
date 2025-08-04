@@ -1,0 +1,48 @@
+body {
+  font-family : "Montserrat", sans-serif;
+  color       : var(--color-gray-light);
+  margin      : 0;
+
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  header {
+    align-self : start;
+  }
+
+  .content {
+    display             : grid;
+    justify-content     : center;
+    align-content       : center;
+    min-height          : 100vh;
+    background-size     : 100% 100%;
+    background-color    : var(--color-bg-medium);
+    background-position : center;
+    text-align          : center;
+
+    .content-inner {
+      display          : grid;
+      gap              : 1rem;
+      position         : relative;
+      width            : 800px;
+      min-height       : 600px;
+      isolation        : isolate;
+      z-index          : 0;
+      border           : 1px solid var(--color-border);
+      background-color : var(--color-bg-dark);
+      padding          : 2rem;
+      max-width        : 75vw;
+    }
+
+    main > *:not(:last-child),
+    section > *:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+  }
+
+  footer {
+    align-self : end;
+  }
+}

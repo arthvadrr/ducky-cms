@@ -9,8 +9,9 @@ if (!defined('DUCKY_ROOT')) {
 
 use function DuckyCMS\dcms_db_exists;
 use function DuckyCMS\dcms_get_base_url;
-
 require_once DUCKY_ROOT . '/includes/functions.php';
+require_once DUCKY_ROOT . '/partials/alert.php';
+require_once DUCKY_ROOT . '/partials/ducky-cms-logo.php';
 
 /**
  * If we don't have a DB then redirect to setup (unles we're in CLI)

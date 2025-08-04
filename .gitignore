@@ -4,3 +4,5 @@
 
 /* Don't include DBs */
 **/*.sqlite
+
+node_modules/

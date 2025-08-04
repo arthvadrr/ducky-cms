@@ -30,7 +30,7 @@ try {
   exit($e);
 }
 
-require_once DUCKY_ROOT . '/templates/admin-layout.php';
+require_once DUCKY_ROOT . '/templates/setup-layout.php';
 
 $logout_url = dcms_get_base_url() . 'auth/logout.php';
 $pages_url  = dcms_get_base_url() . 'dashboard/pages';
