@@ -3,7 +3,16 @@ body {
   color       : var(--color-text);
   margin      : 0;
 
-  div.content {
+  p {
+    margin: 0;
+    padding: 0;
+  }
+
+  header {
+    align-self : start;
+  }
+
+  .content {
     display             : grid;
     justify-content     : center;
     align-content       : center;
@@ -11,11 +20,14 @@ body {
     background-size     : 100% 100%;
     background-color    : #23272d;
     background-position : center;
+    text-align          : center;
 
-    div.content-inner {
+    .content-inner {
       display          : grid;
       gap              : 1rem;
       position         : relative;
+      width            : 800px;
+      min-height       : 600px;
       isolation        : isolate;
       z-index          : 0;
       border           : 1px solid #000;
@@ -24,8 +36,13 @@ body {
       max-width        : 75vw;
     }
 
-    footer {
-      margin-top: 0.5rem;
+    main > *:not(:last-child),
+    section > *:not(:last-child) {
+      margin-bottom: 1rem;
     }
+  }
+
+  footer {
+    align-self : end;
   }
 }

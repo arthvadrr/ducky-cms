@@ -1,0 +1,59 @@
+.alert {
+  display         : flex;
+  justify-content : center;
+  padding         : 0.5rem 1rem;
+  gap             : 0.5rem;
+
+  .message {
+    text-align  : left;
+    font-size   : 0.8rem;
+    font-weight : 800;
+  }
+
+  &.alert-info {
+    background-color : #d0c5e7;
+    color            : #3A3347;
+
+    svg {
+      stroke : #3A3347;
+    }
+  }
+
+  &.alert-success {
+    background-color : #7dc3b2;
+    color            : #1B2724;
+
+    svg {
+      stroke : #1B2724;
+    }
+  }
+
+  &.alert-warning {
+    background-color : #fcca4a;
+    color            : #413925;
+
+    svg {
+      stroke : #413925;
+    }
+  }
+
+  &.alert-danger {
+    background-color : #FF6161;
+    color            : #000;
+
+    svg {
+      stroke : #000;
+    }
+  }
+
+  .icon {
+    display         : grid;
+    align-items     : center;
+    justify-content : center;
+
+    svg {
+      width  : 1.4rem;
+      height : 1.4rem;
+    }
+  }
+}

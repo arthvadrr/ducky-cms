@@ -1,0 +1,45 @@
+.button {
+  position         : relative;
+  top              : 0;
+  display          : inline-block;
+  padding          : 1rem 1.5rem;
+  font-size        : clamp(1rem, 2vw, 1rem);
+  background-color : #ccc;
+  color            : #000;
+  font-weight      : 800;
+  text-decoration  : none;
+  transition       : background-image 0.3s ease, outline-color 0.3s ease, outline-width 0.3s ease;
+  cursor           : pointer;
+  flex-grow: 0;
+  border: 0;
+
+  &.outline {
+    border: 2px solid #ccc;
+    color : #ccc;
+    background-color: transparent;
+
+    &:hover,
+    &:focus,
+    &:active {
+      color: #000;
+      border-color: #00FFB2;
+    }
+  }
+
+  &.button.small {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
+
+  &:hover,
+  &:focus,
+  &:active {
+    background-color: #00ffb2;
+    box-shadow       : 0 0 20px #00ffb233;
+    color            : #000;
+  }
+
+  &:focus {
+    outline : 0.5rem solid #00ffb233;
+  }
+}
