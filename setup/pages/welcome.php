@@ -27,7 +27,7 @@ ob_start();
       <p>
         If you want to create a new database, delete the current one and return to this page.
       </p>
-      <a class="button" href="<?= $login_url ?>">Login to DuckyCMS</a>.
+      <a class="button" href="<?= $login_url ?>">Log in to ducky-cms</a>
     <?php else: ?>
       <p>This little ducky needs your help getting started. Ready?</p>
       <a class="button" href="<?= $create_db_url; ?>">Let’s Begin 🐣</a>

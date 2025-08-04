@@ -94,16 +94,19 @@ $message = dcms_create_admin_user();
 ob_start();
 ?>
   <section>
-    <h2>Create Admin User</h2>
     <p>Pick a username and password.</p>
     <form method="post">
-      <label for="username">Username</label>
-      <input id="username" name="username" type="text" placeholder="ducky_admin" autocomplete="off" required>
-      <label for="password">Password</label>
-      <input id="password" name="password" type="password" placeholder="••••••••••••" autocomplete="off" required>
-      <button type="submit">Create User</button>
+      <div>
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text" placeholder="ducky_admin" autocomplete="off" required>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" placeholder="••••••••••••" autocomplete="off" required>
+      </div>
+      <button class="button" type="submit">Create User</button>
     </form>
     <?php if (!empty($message)) echo '<div class="message">' . $message . '</div>'; ?>
   </section>
   <?php
-render_layout('DuckyCMS Setup', ob_get_clean());
+render_layout('Create Admin User', ob_get_clean());
