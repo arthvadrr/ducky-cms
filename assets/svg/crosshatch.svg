@@ -1,0 +1,9 @@
+<svg width="72" height="72" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="diamondPattern" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="6" x2="6" y2="0" stroke="rgba(46, 51, 58, 1)" stroke-width="1"/>
+      <line x1="0" y1="0" x2="6" y2="6" stroke="rgba(46, 51, 58, 1)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="72" height="72" fill="url(#diamondPattern)"/>
+</svg>
