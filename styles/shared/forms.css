@@ -7,6 +7,12 @@ form {
 
   div {
     display : grid;
+
+    small {
+      text-align: left;
+      font-size: 0.6rem;
+      margin-bottom: 0.2rem;
+    }
   }
 }
 

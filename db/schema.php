@@ -2,8 +2,8 @@
 return "
 CREATE TABLE IF NOT EXISTS users (
 id INTEGER PRIMARY KEY AUTOINCREMENT,
-username TEXT UNIQUE NOT NULL,
-password TEXT NOT NULL,
+username TEXT UNIQUE NOT NULL COLLATE NOCASE CHECK(length(username) BETWEEN 6 AND 32 AND username GLOB '[A-Za-z0-9_-]*'),
+password TEXT NOT NULL CHECK(length(password) >= 60 AND length(password) <= 255),
 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
 session_token TEXT,
 token_created_at INTEGER

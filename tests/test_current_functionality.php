@@ -2,7 +2,7 @@
 /*
  * Test current bootstrap and functions
  */
-require_once 'bootstrap.php';
+require_once dirname(__DIR__) . '/bootstrap.php';
 
 echo "Testing current functionality:\n";
 
