@@ -19,9 +19,13 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
 }
 
 require_once dirname(__DIR__, 2) . '/bootstrap.php';
-require_once DUCKY_ROOT . '/templates/setup-layout.php';
-require_once DUCKY_ROOT . '/includes/functions.php';
-require_once DUCKY_ROOT . '/db/interface.php';
+
+/*
+ * Load required modules using lazy loading
+ */
+use function DuckyCMS\dcms_require_module;
+dcms_require_module('db');
+dcms_require_module('templates');
 
 /**
  * Make session available if it exists and make sure we have a db path from step 1.

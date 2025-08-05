@@ -3,8 +3,13 @@
 namespace DuckyCMS\Setup;
 
 require_once __DIR__ . '/../bootstrap.php';
-require_once DUCKY_ROOT . '/includes/functions.php';
-require_once DUCKY_ROOT . '/db/interface.php';
+
+/*
+ * Load required modules using lazy loading
+ */
+use function DuckyCMS\dcms_require_module;
+dcms_require_module('db');
+dcms_require_module('templates');
 
 use PDOException;
 use function DuckyCMS\DB\get_user_session_token;
@@ -30,7 +35,6 @@ try {
   exit($e);
 }
 
-require_once DUCKY_ROOT . '/templates/setup-layout.php';
 
 $logout_url = dcms_get_base_url() . 'auth/logout/';
 $pages_url  = dcms_get_base_url() . 'dashboard/pages-index/';

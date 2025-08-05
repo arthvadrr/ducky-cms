@@ -6,8 +6,12 @@
 namespace DuckyCMS\Setup;
 
 require_once dirname(__DIR__, 2) . '/bootstrap.php';
-require_once DUCKY_ROOT . '/includes/functions.php';
-require_once DUCKY_ROOT . '/templates/setup-layout.php';
+
+/*
+ * Load required modules using lazy loading
+ */
+use function DuckyCMS\dcms_require_module;
+dcms_require_module('templates');
 
 use function DuckyCMS\dcms_db_exists;
 use function DuckyCMS\dcms_get_base_url;
