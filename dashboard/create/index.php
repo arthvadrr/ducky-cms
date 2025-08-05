@@ -1,8 +1,12 @@
 <?php
 require_once __DIR__ . '/../../bootstrap.php';
-require_once DUCKY_ROOT . '/templates/setup-layout.php';
-require_once DUCKY_ROOT . '/includes/functions.php';
-require_once DUCKY_ROOT . '/db/interface.php';
+
+/*
+ * Load required modules using lazy loading
+ */
+use function DuckyCMS\dcms_require_module;
+dcms_require_module('db');
+dcms_require_module('templates');
 
 use function DuckyCMS\DB\dcms_create_page;
 use function DuckyCMS\dcms_get_base_url;

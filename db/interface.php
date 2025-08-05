@@ -62,9 +62,11 @@ function fetch_single(string $query, array $params = [], ?string $db_path = null
   return $stmt->fetch(PDO::FETCH_ASSOC);
 }
 
-// =============================================================================
-// PAGE MANAGEMENT FUNCTIONS
-// =============================================================================
+/*
+ * =============================================================================
+ * PAGE MANAGEMENT FUNCTIONS
+ * =============================================================================
+ */
 
 /**
  * Get all pages
@@ -107,7 +109,9 @@ function get_page_by_id(int $id, ?string $db_path = null): array|false
  */
 function update_page(int $id, string $title, string $slug, string $content, ?string $db_path = null): bool|string
 {
-  // Prevent duplicate slug for other pages
+  /*
+   * Prevent duplicate slug for other pages
+   */
   $existing = fetch_single("SELECT id FROM pages WHERE slug = :slug AND id != :id", [':slug' => $slug, ':id' => $id], $db_path);
   if ($existing) {
     return 'Slug already exists';
@@ -165,9 +169,11 @@ function dcms_create_page(string $title, string $slug, string $content, ?string 
   }
 }
 
-// =============================================================================
-// USER MANAGEMENT FUNCTIONS
-// =============================================================================
+/*
+ * =============================================================================
+ * USER MANAGEMENT FUNCTIONS
+ * =============================================================================
+ */
 
 /**
  * Get user by username
@@ -241,9 +247,11 @@ function create_user(string $username, string $hashed_password, ?string $db_path
   return $stmt->rowCount() > 0;
 }
 
-// =============================================================================
-// SETTINGS MANAGEMENT FUNCTIONS
-// =============================================================================
+/*
+ * =============================================================================
+ * SETTINGS MANAGEMENT FUNCTIONS
+ * =============================================================================
+ */
 
 /**
  * Get a setting value by key
@@ -282,9 +290,11 @@ function set_setting(string $key, string $value, ?string $db_path = null): bool
   return $stmt->rowCount() > 0;
 }
 
-// =============================================================================
-// SETUP/NONCE MANAGEMENT FUNCTIONS
-// =============================================================================
+/*
+ * =============================================================================
+ * SETUP/NONCE MANAGEMENT FUNCTIONS
+ * =============================================================================
+ */
 
 /**
  * Get setup nonce by token
@@ -338,9 +348,11 @@ function mark_setup_nonce_used(string $token, ?string $db_path = null): bool
   return $stmt->rowCount() > 0;
 }
 
-// =============================================================================
-// DATABASE INITIALIZATION FUNCTIONS
-// =============================================================================
+/*
+ * =============================================================================
+ * DATABASE INITIALIZATION FUNCTIONS
+ * =============================================================================
+ */
 
 /**
  * Initialize database with schema

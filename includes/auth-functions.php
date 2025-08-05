@@ -7,30 +7,10 @@ use function DuckyCMS\DB\get_db_connection;
 use function DuckyCMS\DB\get_setting;
 
 /**
- * Dynamically define the BASE_URL to support installs in different directories or environments.
- * This constructs the URL using the current protocol, host, and path — minus the script name —
- * so links and redirects work reliably without needing to hardcode a base path.
- */
-
-if (!defined('DUCKY_ROOT')) {
-  define('DUCKY_ROOT', dirname(__DIR__));
-}
-
-function dcms_get_base_url(): string {
-  $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-  $host = $_SERVER['HTTP_HOST'];
-
-  return "$protocol://$host/";
-}
-
-function dcms_db_exists(): bool {
-  return !empty( glob(DUCKY_ROOT . '/db/*.sqlite') );
-}
-
-/**
- * Get the user set URL
+ * Get the user-configured site URL from database settings.
+ * Falls back to the base URL if no custom URL is set or database is unavailable.
  *
- * @return string
+ * @return string The configured site URL or base URL as fallback
  */
 function dcms_get_site_url(): string {
   $default_url = dcms_get_base_url();
@@ -40,7 +20,7 @@ function dcms_get_site_url(): string {
     return $default_url;
   }
 
-  require_once DUCKY_ROOT . '/db/interface.php';
+  dcms_require_module('db');
   
   try {
     $site_url = get_setting('site_url');
@@ -50,7 +30,13 @@ function dcms_get_site_url(): string {
   }
 }
 
-
+/**
+ * Require user authentication to access protected resources.
+ * Redirects to login page if user is not authenticated or session is invalid.
+ * Validates session token against database for security.
+ *
+ * @return void
+ */
 function dcms_require_login(): void {
   session_start();
 
@@ -59,7 +45,7 @@ function dcms_require_login(): void {
     exit;
   }
 
-  require_once DUCKY_ROOT . '/db/interface.php';
+  dcms_require_module('db');
   $pdo = get_db_connection();
   $stmt = $pdo->prepare("SELECT COUNT(*) FROM users WHERE id = :id AND session_token = :token");
   $stmt->execute([

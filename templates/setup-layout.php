@@ -1,5 +1,4 @@
 <?php
-// Import the ducky-cms-logo.svg from assets/images directory.
 /**
  * Renders the full HTML layout for a page.
  *
@@ -10,10 +9,12 @@
 namespace DuckyCMS\Setup;
 
 use function DuckyCMS\dcms_get_base_url;
+use function DuckyCMS\dcms_require_module;
 use function DuckyCMS\render_ducky_logo;
 
 function render_layout(string $title = '', string $content = ''): void
 {
+  dcms_require_module('partials');
   $base_url = dcms_get_base_url();
   ?>
   <!DOCTYPE html>

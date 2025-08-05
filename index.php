@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/bootstrap.php';
-require_once DUCKY_ROOT . '/includes/functions.php';
 
 use function DuckyCMS\dcms_db_exists;
 

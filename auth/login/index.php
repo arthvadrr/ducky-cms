@@ -18,9 +18,13 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
  * Includes
  */
 require_once '../../bootstrap.php';
-require_once '../../includes/functions.php';
-require_once '../../templates/setup-layout.php';
-require_once '../../db/interface.php';
+
+/*
+ * Load required modules using lazy loading
+ */
+use function DuckyCMS\dcms_require_module;
+dcms_require_module('db');
+dcms_require_module('templates');
 
 session_start();
 
