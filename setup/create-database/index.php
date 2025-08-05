@@ -57,7 +57,7 @@ function dcms_create_db(): string
         return '<p>Error: ' . htmlspecialchars($e->getMessage()) . '</p>';
       }
 
-      $next_url = dcms_get_base_url() . 'setup/pages/set-site-url.php';
+      $next_url = dcms_get_base_url() . 'setup/set-site-url/';
       return '<p>Database created successfully!</p> <a class="button" href="' . $next_url . '">Continue to Set Site URL</a>';
     } catch (PDOException $e) {
       return '<p>Error: ' . htmlspecialchars($e->getMessage()) . '</p>';
@@ -68,7 +68,7 @@ function dcms_create_db(): string
 }
 
 $message      = dcms_create_db();
-$set_site_url = dcms_get_base_url() . 'setup/pages/set-site-url.php';
+$set_site_url = dcms_get_base_url() . 'setup/set-site-url/';
 
 ob_start();
 

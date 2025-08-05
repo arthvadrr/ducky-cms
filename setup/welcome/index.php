@@ -14,8 +14,8 @@ use function DuckyCMS\dcms_get_base_url;
 
 $has_db        = dcms_db_exists();
 $base_url      = dcms_get_base_url();
-$create_db_url = $base_url . 'setup/pages/create-database.php';
-$login_url     = $base_url . 'auth/login.php';
+$create_db_url = $base_url . 'setup/create-database/';
+$login_url     = $base_url . 'auth/login/';
 
 ob_start();
 ?>

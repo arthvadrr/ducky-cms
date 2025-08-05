@@ -55,7 +55,7 @@ function dcms_require_login(): void {
   session_start();
 
   if (empty($_SESSION['user_id']) || empty($_SESSION['session_token'])) {
-    header('Location: /auth/login.php');
+    header('Location: /auth/login/');
     exit;
   }
 
@@ -69,7 +69,7 @@ function dcms_require_login(): void {
 
   if (!$stmt->fetchColumn()) {
     session_destroy();
-    header('Location: /auth/login.php');
+    header('Location: /auth/login/');
     exit;
   }
 }

@@ -15,13 +15,13 @@ dcms_require_login();
 
 $page_id = $_GET['id'] ?? null;
 if (!$page_id || !is_numeric($page_id)) {
-  header('Location: /dashboard/pages/index.php');
+  header('Location: /dashboard/pages-index/');
   exit;
 }
 
 $page = get_page_by_id((int)$page_id);
 if (!$page) {
-  header('Location: /dashboard/pages/index.php');
+  header('Location: /dashboard/pages-index/');
   exit;
 }
 
@@ -43,8 +43,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-$pages_url = dcms_get_base_url() . 'dashboard/pages';
-$delete_url = dcms_get_base_url() . 'dashboard/pages/delete.php';
+$pages_url = dcms_get_base_url() . 'dashboard/pages-index/';
+$delete_url = dcms_get_base_url() . 'dashboard/delete/';
 
 ob_start();
 ?>

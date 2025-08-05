@@ -17,10 +17,10 @@ if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
 /**
  * Includes
  */
-require_once '../bootstrap.php';
-require_once '../includes/functions.php';
-require_once '../templates/setup-layout.php';
-require_once '../db/interface.php';
+require_once '../../bootstrap.php';
+require_once '../../includes/functions.php';
+require_once '../../templates/setup-layout.php';
+require_once '../../db/interface.php';
 
 session_start();
 
@@ -60,7 +60,7 @@ function handle_login(): string
       $_SESSION['user_id']       = $user['id'];
       $_SESSION['session_token'] = $token;
 
-      header('Location: ' . dcms_get_base_url() . 'dashboard/index.php');
+      header('Location: ' . dcms_get_base_url() . 'dashboard');
       exit;
     }
 
