@@ -26,6 +26,16 @@ function get_db_connection(?string $db_path = null): PDO
   $pdo = new PDO('sqlite:' . $db_path);
   $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+  /*
+   * Enable SQLite WAL (Write-Ahead Logging) mode and increase cache size
+   * for improved concurrent access performance. WAL mode allows multiple
+   * readers to access the database simultaneously while a writer is active,
+   * which is essential for a CMS where admins might be editing content
+   * while visitors browse the site.
+   */
+  $pdo->exec('PRAGMA journal_mode=WAL');
+  $pdo->exec('PRAGMA cache_size=10000');
+
   return $pdo;
 }
 
