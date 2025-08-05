@@ -7,7 +7,7 @@ use function DuckyCMS\dcms_db_exists;
 
 function dcms_handle_root_redirect(): never {
   if (!dcms_db_exists()) {
-    header('Location: setup/pages/welcome.php');
+    header('Location: setup/welcome/');
     exit;
   }
 
@@ -15,12 +15,12 @@ function dcms_handle_root_redirect(): never {
     session_start();
 
     if (isset($_SESSION['user_id'], $_SESSION['session_token'])) {
-      header('Location: dashboard/index.php');
+      header('Location: dashboard/pages-index/');
       exit;
     }
   }
 
-  header('Location: auth/login.php');
+  header('Location: auth/login/');
   exit;
 }
 

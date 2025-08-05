@@ -18,7 +18,7 @@ function dcms_handle_site_url_update(): string
 {
   if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['site_url'])) {
     $url                   = trim($_POST['site_url']);
-    $create_admin_user_url = dcms_get_base_url() . 'setup/pages/create-admin-user.php';
+    $create_admin_user_url = dcms_get_base_url() . 'setup/create-admin-user/';
 
     try {
       set_setting('site_url', $url);

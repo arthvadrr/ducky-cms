@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = dcms_create_page($title, $slug, $content);
 
     if (is_int($result)) {
-      header("Location: " . dcms_get_base_url() . "dashboard/pages/edit.php?id=$result");
+      header("Location: " . dcms_get_base_url() . "dashboard/edit/?id=$result");
       exit();
     }
 
@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-$pages_url = dcms_get_base_url() . 'dashboard/pages';
+$pages_url = dcms_get_base_url() . 'dashboard/pages-index/';
 
 ob_start();
 ?>

@@ -32,7 +32,7 @@ $db_path = $_SESSION['db_path'] ?? null;
 $nonce   = $_SESSION['setup_nonce'] ?? null;
 
 if (!$db_path || !$nonce || !file_exists($db_path)) {
-  header('Location: ' . dcms_get_base_url() . 'auth/login.php');
+  header('Location: ' . dcms_get_base_url() . 'auth/login/');
   exit;
 }
 
@@ -40,11 +40,11 @@ try {
   $row = get_setup_nonce($nonce, $db_path);
 
   if (!$row || $row['used'] || $row['created_at'] < (time() - 86400)) {
-    header('Location: ' . dcms_get_base_url() . 'auth/login.php');
+    header('Location: ' . dcms_get_base_url() . 'auth/login/');
     exit;
   }
 } catch (PDOException $e) {
-  header('Location: ' . dcms_get_base_url() . 'auth/login.php');
+  header('Location: ' . dcms_get_base_url() . 'auth/login/');
   exit($e);
 }
 
@@ -82,7 +82,7 @@ function dcms_create_admin_user(): string
     create_user($username, $hashed_password, $db_path);
     mark_setup_nonce_used($nonce, $db_path);
     $base_url = dcms_get_base_url();
-    header('Location: ' . $base_url . 'auth/login.php');
+    header('Location: ' . $base_url . 'auth/login/');
     exit;
   } catch (PDOException $e) {
     return '<p>Error creating user: ' . htmlspecialchars($e->getMessage()) . '</p>';

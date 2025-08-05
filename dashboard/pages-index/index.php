@@ -9,7 +9,7 @@ use function DuckyCMS\DB\dcms_get_all_pages;
 use function DuckyCMS\Setup\render_layout;
 
 $pages           = dcms_get_all_pages();
-$create_page_url = dcms_get_base_url() . 'dashboard/pages/create.php';
+$create_page_url = dcms_get_base_url() . 'dashboard/create/';
 
 ob_start();
 ?>
@@ -23,7 +23,7 @@ ob_start();
         <br>
         <code>/<?= htmlspecialchars($page['slug']) ?></code>
         <br>
-        <a href="<?= dcms_get_base_url() . 'dashboard/pages/edit.php?id=' . $page['id'] ?>">Edit</a>
+        <a href="<?= dcms_get_base_url() . 'dashboard/edit/?id=' . $page['id'] ?>">Edit</a>
       </li>
     <?php endforeach; ?>
   </ul>
