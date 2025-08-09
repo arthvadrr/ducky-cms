@@ -12,7 +12,7 @@ use function DuckyCMS\dcms_get_base_url;
 use function DuckyCMS\dcms_require_module;
 use function DuckyCMS\render_ducky_logo;
 
-function render_setup_layout(string $title = '', string $content = ''): void
+function render_dashboard_layout(string $title = '', string $content = ''): void
 {
   dcms_require_module('partials');
   $base_url = dcms_get_base_url();
@@ -24,29 +24,29 @@ function render_setup_layout(string $title = '', string $content = ''): void
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A cozy handcrafted CMS.">
     <meta name="author" content="Ducky">
-    <link rel="stylesheet" href=<?= $base_url . "dist/build.css" ?>>
+    <link rel="stylesheet" href=<?= $base_url . "dist/admin.css" ?>>
     <title><?= htmlspecialchars($title) ?></title>
   </head>
   <body>
-  <div class="content">
-    <div class="content-inner">
-      <header>
-        <span class="branding">
-          <?= render_ducky_logo(["width" => 75]) ?>
-          <span class="site-title">ducky-cms</span>
-        </span>
-      </header>
-      <main>
-        <h1>
-          <?= htmlspecialchars($title) ?>
-        </h1>
-        <?= $content ?>
-      </main>
-      <footer>
-        <span>&copy; <?= date('Y') ?> ducky-cms</span>
-      </footer>
+  <aside>
+    <div class="branding">
+      <?= render_ducky_logo(["width" => 50]) ?>
+      <span class="site-title">ducky-cms</span>
     </div>
-  </div>
+    <nav>
+      <div>
+        <ul>
+          <li><a href="#">Pages</a></li>
+        </ul>
+        <ul>
+          <li><a href="#">Settings</a></li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+  <main>
+    <?= $content ?>
+  </main>
   </body>
   </html>
   <?php
