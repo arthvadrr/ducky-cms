@@ -9,7 +9,7 @@ require_once __DIR__ . '/../bootstrap.php';
  */
 use function DuckyCMS\dcms_require_module;
 dcms_require_module('db');
-dcms_require_module('templates');
+dcms_require_module('admin');
 
 use PDOException;
 use function DuckyCMS\DB\get_user_session_token;
@@ -35,9 +35,8 @@ try {
   exit($e);
 }
 
-
 $logout_url = dcms_get_base_url() . 'auth/logout/';
-$pages_url  = dcms_get_base_url() . 'dashboard/pages-index/';
+$pages_url  = dcms_get_base_url() . 'admin/pages-index/';
 
 ob_start();
 ?>
@@ -49,4 +48,4 @@ ob_start();
     <li><a href=<?= $logout_url ?>>Logout</a></li>
   </ul>
   <?php
-render_layout('DuckyCMS Dashboard', ob_get_clean());
+render_dashboard_layout('Dashboard', ob_get_clean());

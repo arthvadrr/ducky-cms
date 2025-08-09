@@ -10,7 +10,7 @@ dcms_require_module('templates');
 
 use function DuckyCMS\DB\dcms_create_page;
 use function DuckyCMS\dcms_get_base_url;
-use function DuckyCMS\Setup\render_layout;
+use function DuckyCMS\Setup\render_setup_layout;
 
 $message = '';
 $title   = '';
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = dcms_create_page($title, $slug, $content);
 
     if (is_int($result)) {
-      header("Location: " . dcms_get_base_url() . "dashboard/edit/?id=$result");
+      header("Location: " . dcms_get_base_url() . "admin/edit/?id=$result");
       exit();
     }
 
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-$pages_url = dcms_get_base_url() . 'dashboard/pages-index/';
+$pages_url = dcms_get_base_url() . 'admin/pages-index/';
 
 ob_start();
 ?>
@@ -58,4 +58,4 @@ ob_start();
 <?php
 $page_content = ob_get_clean();
 
-render_layout('Create Page', $page_content);
+render_setup_layout('Create Page', $page_content);

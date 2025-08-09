@@ -64,7 +64,7 @@ function handle_login(): string
       $_SESSION['user_id']       = $user['id'];
       $_SESSION['session_token'] = $token;
 
-      header('Location: ' . dcms_get_base_url() . 'dashboard');
+      header('Location: ' . dcms_get_base_url() . 'admin');
       exit;
     }
 
@@ -90,4 +90,4 @@ ob_start();
     <button class="button">Log In</button>
   </form>
   <?php if (!empty($message)) echo $message; ?>
-  <?php render_layout("DuckyCMS Login", ob_get_clean()); ?>
+  <?php render_setup_layout("DuckyCMS Login", ob_get_clean()); ?>

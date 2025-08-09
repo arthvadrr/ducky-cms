@@ -10,10 +10,10 @@ dcms_require_module('templates');
 
 use function DuckyCMS\dcms_get_base_url;
 use function DuckyCMS\DB\dcms_get_all_pages;
-use function DuckyCMS\Setup\render_layout;
+use function DuckyCMS\Setup\render_setup_layout;
 
 $pages           = dcms_get_all_pages();
-$create_page_url = dcms_get_base_url() . 'dashboard/create/';
+$create_page_url = dcms_get_base_url() . 'admin/create/';
 
 ob_start();
 ?>
@@ -27,9 +27,9 @@ ob_start();
         <br>
         <code>/<?= htmlspecialchars($page['slug']) ?></code>
         <br>
-        <a href="<?= dcms_get_base_url() . 'dashboard/edit/?id=' . $page['id'] ?>">Edit</a>
+        <a href="<?= dcms_get_base_url() . 'admin/edit/?id=' . $page['id'] ?>">Edit</a>
       </li>
     <?php endforeach; ?>
   </ul>
 <?php
-render_layout('Pages', ob_get_clean());
+render_setup_layout('Pages', ob_get_clean());

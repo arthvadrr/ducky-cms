@@ -58,6 +58,9 @@ function dcms_require_module(string $module): bool {
       'templates' => [
         'files' => [DUCKY_ROOT . '/templates/setup-layout.php']
       ],
+      'admin' => [
+        'files' => [DUCKY_ROOT . '/templates/admin-layout.php']
+      ],
       'partials' => [
         'files' => [
           DUCKY_ROOT . '/partials/alert.php',

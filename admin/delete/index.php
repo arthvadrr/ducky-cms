@@ -15,5 +15,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
   }
 }
 
-header('Location: /dashboard/pages');
+header('Location: /admin/pages');
 exit();
