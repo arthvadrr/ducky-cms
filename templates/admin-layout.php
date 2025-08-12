@@ -21,6 +21,7 @@ function dcms_render_dashboard_layout(string $title = '', string $content = '', 
   $dashboard_url = $base_url . 'admin/';
   $pages_url     = $base_url . 'admin/pages-index/';
   $settings_url  = $base_url . 'admin/settings/';
+  $logout_url    = $base_url . 'auth/logout/';
   ?>
   <!DOCTYPE html>
   <html lang="en" style="background-color:#23272d;">
@@ -35,7 +36,7 @@ function dcms_render_dashboard_layout(string $title = '', string $content = '', 
   <body>
   <aside>
     <div class="branding">
-      <?= dcms_render_ducky_logo(["width" => 45]) ?>
+      <?= dcms_render_ducky_logo(["width" => 40]) ?>
       <span class="site-title">ducky-cms</span>
     </div>
     <nav role="navigation" aria-label="Main menu">
@@ -65,6 +66,13 @@ function dcms_render_dashboard_layout(string $title = '', string $content = '', 
               'width' => 30,
               'href'  => $settings_url,
               'is_current' => ($current_menu === 'settings')
+            ]) ?>
+          </li>
+          <li>
+            <?= dcms_menu_item([
+              'name'  => 'Logout',
+              'width' => 30,
+              'href'  => $logout_url,
             ]) ?>
           </li>
         </ul>

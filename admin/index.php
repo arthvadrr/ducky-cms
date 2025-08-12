@@ -40,7 +40,7 @@ $pages_url  = dcms_get_base_url() . 'admin/pages-index/';
 
 ob_start();
 ?>
-  <h2>Dashboard</h2>
+  <h1>Dashboard</h1>
   <p>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>! You’ve made it to the DuckyCMS dashboard.</p>
   <ul>
     <li><a href="<?= $pages_url ?>">Pages</a></li>
