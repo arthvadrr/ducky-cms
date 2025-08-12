@@ -11,7 +11,7 @@ namespace DuckyCMS;
  */
 function dcms_get_base_url(): string {
   $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-  $host = $_SERVER['HTTP_HOST'];
+  $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
 
   return "$protocol://$host/";
 }
@@ -64,7 +64,8 @@ function dcms_require_module(string $module): bool {
       'partials' => [
         'files' => [
           DUCKY_ROOT . '/partials/alert.php',
-          DUCKY_ROOT . '/partials/ducky-cms-logo.php'
+          DUCKY_ROOT . '/partials/ducky-cms-logo.php',
+          DUCKY_ROOT . '/partials/menu-item.php'
         ]
       ]
     ];

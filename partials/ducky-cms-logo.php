@@ -11,7 +11,7 @@
 
 namespace DuckyCMS;
 
-function render_ducky_logo(array $options = []): string
+function dcms_render_ducky_logo(array $options = []): string
 {
   $ducky_gradient  = $options['ducky_gradient'] ?? ['#d9803d', '#E87927', '#E8BD3B', '#00FFB2'];
   $stroke_gradient = $options['stroke_gradient'] ?? ['#d9803d', '#ff7800'];
@@ -29,6 +29,7 @@ function render_ducky_logo(array $options = []): string
     stroke-miterlimit="1.5"
     clip-rule="evenodd"
     viewBox="0 0 400 400"
+    aria-hidden="true"
     $width_attr
     $height_attr
   >

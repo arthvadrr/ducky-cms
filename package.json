@@ -4,7 +4,7 @@
   "description": "A simple CMS",
   "type": "module",
   "scripts": {
-    "build": "rollup -c",
+    "build": "sh -c 'rm -rf dist && mkdir -p dist && rollup -c && rm -f dist/*.js && rm -rf dist/dist'",
     "dev": "sh -c 'trap \"pkill -f \\\"php -S localhost:5173\\\"\" EXIT; concurrently \"rollup -c -w\" \"php -S localhost:5173\"'"
   },
   "devDependencies": {

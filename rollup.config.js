@@ -14,8 +14,8 @@ export default [
     plugins: [
       postcss({
         plugins: [postcssImport()],
-        // Keep output name the same as before for setup layout
-        extract: 'build.css',
+        // Extract setup bundle CSS to desired filename
+        extract: 'setup.css',
         minimize: true,
       }),
     ],

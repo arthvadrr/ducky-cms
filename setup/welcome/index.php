@@ -38,4 +38,4 @@ ob_start();
     <?php endif; ?>
   </section>
 
-  <?php render_setup_layout('Get Started', ob_get_clean()); ?>
+  <?php dcms_render_setup_layout('Get Started', ob_get_clean()); ?>

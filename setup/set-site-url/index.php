@@ -15,7 +15,7 @@ use function DuckyCMS\DB\get_setting;
 use function DuckyCMS\DB\set_setting;
 use function DuckyCMS\dcms_alert;
 use function DuckyCMS\dcms_get_base_url;
-use function DuckyCMS\Setup\render_setup_layout;
+use function DuckyCMS\Setup\dcms_render_setup_layout;
 
 session_start();
 
@@ -85,5 +85,5 @@ ob_start();
     <button class="button" type="submit">Save</button>
   </form>
 <?php endif;
-render_setup_layout('Set Site URL', ob_get_clean());
+dcms_render_setup_layout('Set Site URL', ob_get_clean());
 ?>

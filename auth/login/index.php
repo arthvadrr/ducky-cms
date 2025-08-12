@@ -90,4 +90,4 @@ ob_start();
     <button class="button">Log In</button>
   </form>
   <?php if (!empty($message)) echo $message; ?>
-  <?php render_setup_layout("DuckyCMS Login", ob_get_clean()); ?>
+  <?php dcms_render_setup_layout("DuckyCMS Login", ob_get_clean()); ?>
