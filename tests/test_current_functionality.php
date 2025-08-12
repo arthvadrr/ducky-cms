@@ -40,7 +40,7 @@ try {
 echo "4. Testing partials loading: ";
 try {
     \DuckyCMS\dcms_require_module('partials');
-    if (function_exists('DuckyCMS\render_ducky_logo')) {
+    if (function_exists('DuckyCMS\dcms_render_ducky_logo')) {
         echo "✓ Success: render_ducky_logo function available\n";
     } else {
         echo "✗ Error: render_ducky_logo function not available\n";
