@@ -10,7 +10,7 @@ dcms_require_module('templates');
 
 use function DuckyCMS\dcms_get_base_url;
 use function DuckyCMS\DB\dcms_get_all_pages;
-use function DuckyCMS\Setup\render_setup_layout;
+use function DuckyCMS\Setup\dcms_render_setup_layout;
 
 $pages           = dcms_get_all_pages();
 $create_page_url = dcms_get_base_url() . 'admin/create/';
@@ -32,4 +32,4 @@ ob_start();
     <?php endforeach; ?>
   </ul>
 <?php
-render_setup_layout('Pages', ob_get_clean());
+dcms_render_setup_layout('Pages', ob_get_clean());

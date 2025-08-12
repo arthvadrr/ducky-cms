@@ -10,7 +10,7 @@ dcms_require_module('templates');
 
 use function DuckyCMS\DB\dcms_create_page;
 use function DuckyCMS\dcms_get_base_url;
-use function DuckyCMS\Setup\render_setup_layout;
+use function DuckyCMS\Setup\dcms_render_setup_layout;
 
 $message = '';
 $title   = '';
@@ -58,4 +58,4 @@ ob_start();
 <?php
 $page_content = ob_get_clean();
 
-render_setup_layout('Create Page', $page_content);
+dcms_render_setup_layout('Create Page', $page_content);

@@ -14,7 +14,7 @@ use function DuckyCMS\DB\get_page_by_id;
 use function DuckyCMS\DB\update_page;
 use function DuckyCMS\dcms_get_base_url;
 use function DuckyCMS\dcms_require_login;
-use function DuckyCMS\Setup\render_setup_layout;
+use function DuckyCMS\Setup\dcms_render_setup_layout;
 
 dcms_require_login();
 
@@ -72,4 +72,4 @@ ob_start();
     <button type="submit" style="color: red;">Delete Page</button>
   </form>
 <?php
-render_setup_layout('Edit Page', ob_get_clean());
+dcms_render_setup_layout('Edit Page', ob_get_clean());

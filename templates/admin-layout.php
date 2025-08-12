@@ -4,18 +4,23 @@
  *
  * @param string $title The page title shown in the title tag and header.
  * @param string $content The HTML content to insert into the main section.
+ * @param string|null $current_menu Optional: which menu item is current ('dashboard'|'pages'|'settings').
  */
 
 namespace DuckyCMS\Setup;
 
 use function DuckyCMS\dcms_get_base_url;
+use function DuckyCMS\dcms_menu_item;
+use function DuckyCMS\dcms_render_ducky_logo;
 use function DuckyCMS\dcms_require_module;
-use function DuckyCMS\render_ducky_logo;
 
-function render_dashboard_layout(string $title = '', string $content = ''): void
+function dcms_render_dashboard_layout(string $title = '', string $content = '', $current_menu = null): void
 {
   dcms_require_module('partials');
-  $base_url = dcms_get_base_url();
+  $base_url      = dcms_get_base_url();
+  $dashboard_url = $base_url . 'admin/';
+  $pages_url     = $base_url . 'admin/pages-index/';
+  $settings_url  = $base_url . 'admin/settings/';
   ?>
   <!DOCTYPE html>
   <html lang="en" style="background-color:#23272d;">
@@ -30,16 +35,38 @@ function render_dashboard_layout(string $title = '', string $content = ''): void
   <body>
   <aside>
     <div class="branding">
-      <?= render_ducky_logo(["width" => 50]) ?>
+      <?= dcms_render_ducky_logo(["width" => 45]) ?>
       <span class="site-title">ducky-cms</span>
     </div>
-    <nav>
-      <div>
+    <nav role="navigation" aria-label="Main menu">
+      <div class="nav-inner">
         <ul>
-          <li><a href="#">Pages</a></li>
+          <li>
+            <?= dcms_menu_item([
+              'name'  => 'Dashboard',
+              'width' => 30,
+              'href'  => $dashboard_url,
+              'is_current' => ($current_menu === 'dashboard')
+            ]) ?>
+          </li>
+          <li>
+            <?= dcms_menu_item([
+              'name'  => 'Pages',
+              'width' => 30,
+              'href'  => $pages_url,
+              'is_current' => ($current_menu === 'pages')
+            ]) ?>
+          </li>
         </ul>
         <ul>
-          <li><a href="#">Settings</a></li>
+          <li>
+            <?= dcms_menu_item([
+              'name'  => 'Settings',
+              'width' => 30,
+              'href'  => $settings_url,
+              'is_current' => ($current_menu === 'settings')
+            ]) ?>
+          </li>
         </ul>
       </div>
     </nav>

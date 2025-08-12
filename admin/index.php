@@ -48,4 +48,4 @@ ob_start();
     <li><a href=<?= $logout_url ?>>Logout</a></li>
   </ul>
   <?php
-render_dashboard_layout('Dashboard', ob_get_clean());
+dcms_render_dashboard_layout('Dashboard', ob_get_clean(), 'dashboard');
