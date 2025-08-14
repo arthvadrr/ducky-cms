@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 use function DuckyCMS\dcms_require_login;
 use function DuckyCMS\DB\execute_query;
@@ -15,5 +15,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
   }
 }
 
-header('Location: /admin/pages');
+header('Location: /admin/pages/');
 exit();

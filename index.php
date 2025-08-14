@@ -14,7 +14,7 @@ function dcms_handle_root_redirect(): never {
     session_start();
 
     if (isset($_SESSION['user_id'], $_SESSION['session_token'])) {
-      header('Location: admin/pages-index/');
+      header('Location: admin/pages/');
       exit;
     }
   }

@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 /*
  * Load required modules using lazy loading
@@ -20,13 +20,13 @@ dcms_require_login();
 
 $page_id = $_GET['id'] ?? null;
 if (!$page_id || !is_numeric($page_id)) {
-  header('Location: /admin/pages-index/');
+  header('Location: /admin/pages/');
   exit;
 }
 
 $page = get_page_by_id((int)$page_id);
 if (!$page) {
-  header('Location: /admin/pages-index/');
+  header('Location: /admin/pages/');
   exit;
 }
 
@@ -48,8 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-$pages_url = dcms_get_base_url() . 'admin/pages-index/';
-$delete_url = dcms_get_base_url() . 'admin/delete/';
+$pages_url = dcms_get_base_url() . 'admin/pages/';
+$delete_url = dcms_get_base_url() . 'admin/pages/delete/';
 
 ob_start();
 ?>

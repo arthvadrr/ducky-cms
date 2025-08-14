@@ -19,7 +19,7 @@ function dcms_render_dashboard_layout(string $title = '', string $content = '', 
   dcms_require_module('partials');
   $base_url      = dcms_get_base_url();
   $dashboard_url = $base_url . 'admin/';
-  $pages_url     = $base_url . 'admin/pages-index/';
+  $pages_url     = $base_url . 'admin/pages/';
   $settings_url  = $base_url . 'admin/settings/';
   $logout_url    = $base_url . 'auth/logout/';
   ?>
