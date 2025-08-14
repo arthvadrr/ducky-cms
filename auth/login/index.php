@@ -46,6 +46,10 @@ function handle_login(): string
   $password = $_POST['password'] ?? '';
   $db_path  = DUCKY_ROOT . '/db/ducky.sqlite';
 
+  $greetings = [
+    "Waddle you do Next?"
+  ];
+
   if (!file_exists($db_path)) {
     return '<p>Database not found.</p>';
   }
@@ -78,6 +82,7 @@ $message = handle_login();
 
 ob_start();
 ?>
+<p>Please log in to your account to access the dashboard.</p>
   <form method="post">
     <div>
       <label for="username">Username:</label>
@@ -90,4 +95,4 @@ ob_start();
     <button class="button">Log In</button>
   </form>
   <?php if (!empty($message)) echo $message; ?>
-  <?php dcms_render_setup_layout("DuckyCMS Login", ob_get_clean()); ?>
+  <?php dcms_render_setup_layout("Login", ob_get_clean()); ?>

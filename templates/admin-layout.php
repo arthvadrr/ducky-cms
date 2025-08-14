@@ -36,7 +36,7 @@ function dcms_render_dashboard_layout(string $title = '', string $content = '', 
   <body>
   <aside>
     <div class="branding">
-      <?= dcms_render_ducky_logo(["width" => 40]) ?>
+      <?= dcms_render_ducky_logo(["width" => 35]) ?>
       <span class="site-title">ducky-cms</span>
     </div>
     <nav role="navigation" aria-label="Main menu">
@@ -45,7 +45,7 @@ function dcms_render_dashboard_layout(string $title = '', string $content = '', 
           <li>
             <?= dcms_menu_item([
               'name'  => 'Dashboard',
-              'width' => 30,
+              'width' => 25,
               'href'  => $dashboard_url,
               'is_current' => ($current_menu === 'dashboard')
             ]) ?>
@@ -53,7 +53,7 @@ function dcms_render_dashboard_layout(string $title = '', string $content = '', 
           <li>
             <?= dcms_menu_item([
               'name'  => 'Pages',
-              'width' => 30,
+              'width' => 25,
               'href'  => $pages_url,
               'is_current' => ($current_menu === 'pages')
             ]) ?>
@@ -63,7 +63,7 @@ function dcms_render_dashboard_layout(string $title = '', string $content = '', 
           <li>
             <?= dcms_menu_item([
               'name'  => 'Settings',
-              'width' => 30,
+              'width' => 25,
               'href'  => $settings_url,
               'is_current' => ($current_menu === 'settings')
             ]) ?>
@@ -71,7 +71,7 @@ function dcms_render_dashboard_layout(string $title = '', string $content = '', 
           <li>
             <?= dcms_menu_item([
               'name'  => 'Logout',
-              'width' => 30,
+              'width' => 25,
               'href'  => $logout_url,
             ]) ?>
           </li>

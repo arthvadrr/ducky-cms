@@ -49,12 +49,11 @@ enum MenuIcon: string
 
 function dcms_menu_item(array $options): string
 {
-  $nameRaw = (string)($options['name'] ?? '');
-  $name    = htmlspecialchars($nameRaw);
-  $width   = (int)($options['width'] ?? 24);
-  $href    = (string)($options['href'] ?? '#');
-
+  $nameRaw   = (string)($options['name'] ?? '');
+  $name      = htmlspecialchars($nameRaw);
+  $width     = (int)($options['width'] ?? 24);
   $isCurrent = (bool)($options['is_current'] ?? false);
+  $href      = (string)($options['href'] ?? '#');
 
   /**
    * Validate the enum value
@@ -68,11 +67,14 @@ function dcms_menu_item(array $options): string
   $class       = 'menu-item' . ($isCurrent ? ' is-current' : '');
   $ariaCurrent = $isCurrent ? ' aria-current="page"' : '';
 
-  return
-    <<<HTML
-      <a href="$href" class="$class" role="menuitem" $ariaCurrent>
-        $iconSvg
-        <span class="menu-name">$name</span>
-      </a>
-    HTML;
+  // Use a single template. Choose tag and attributes once.
+  $tag      = $isCurrent ? 'div' : 'a';
+  $hrefAttr = $isCurrent ? '' : ' href="' . htmlspecialchars($href, ENT_QUOTES) . '"';
+
+  return <<<HTML
+    <$tag $hrefAttr class="$class" role="menuitem" $ariaCurrent>
+      {$iconSvg}
+      <span class="menu-name">$name</span>
+    </$tag>
+  HTML;
 }

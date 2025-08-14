@@ -35,17 +35,9 @@ try {
   exit($e);
 }
 
-$logout_url = dcms_get_base_url() . 'auth/logout/';
-$pages_url  = dcms_get_base_url() . 'admin/pages-index/';
-
 ob_start();
 ?>
   <h1>Dashboard</h1>
   <p>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>! You’ve made it to the DuckyCMS dashboard.</p>
-  <ul>
-    <li><a href="<?= $pages_url ?>">Pages</a></li>
-    <li><a href="#">View Posts</a></li>
-    <li><a href=<?= $logout_url ?>>Logout</a></li>
-  </ul>
   <?php
 dcms_render_dashboard_layout('Dashboard', ob_get_clean(), 'dashboard');
