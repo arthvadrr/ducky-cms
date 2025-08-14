@@ -91,4 +91,4 @@ if (dcms_db_exists() && empty($message)) : ?>
   <a class="button" href="<?= $set_site_url ?>">Continue to Set Site URL</a>
 <?php endif;
 
-render_layout('Create SQLite Database', ob_get_clean());
+dcms_render_setup_layout('Create SQLite Database', ob_get_clean());

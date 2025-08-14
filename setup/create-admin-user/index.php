@@ -125,4 +125,4 @@ ob_start();
     <?php endif; ?>
   </section>
   <?php
-render_layout('Create Admin User', ob_get_clean());
+dcms_render_setup_layout('Create Admin User', ob_get_clean());

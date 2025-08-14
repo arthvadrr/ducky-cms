@@ -1,18 +1,39 @@
 import postcss from 'rollup-plugin-postcss';
 import postcssImport from 'postcss-import';
 
-export default {
-  input: 'styles/index.css',
-  output: {
-    name: 'noop',
-    file: 'dist/build.css',
-    format: 'iife',
+// Export multiple build configs so Rollup watches/builds both bundles
+export default [
+  // Setup bundle (keeps existing behavior/output name)
+  {
+    input: 'styles/setup.css',
+    output: {
+      name: 'noop',
+      file: 'dist/setup.bundle.js',
+      format: 'iife',
+    },
+    plugins: [
+      postcss({
+        plugins: [postcssImport()],
+        // Extract setup bundle CSS to desired filename
+        extract: 'setup.css',
+        minimize: true,
+      }),
+    ],
   },
-  plugins: [
-    postcss({
-      plugins: [postcssImport()],
-      extract: true,
-      minimize: true,
-    }),
-  ],
-};
+  // Admin bundle
+  {
+    input: 'styles/admin.css',
+    output: {
+      name: 'noop',
+      file: 'dist/admin.bundle.js',
+      format: 'iife',
+    },
+    plugins: [
+      postcss({
+        plugins: [postcssImport()],
+        extract: 'admin.css',
+        minimize: true,
+      }),
+    ],
+  },
+];
