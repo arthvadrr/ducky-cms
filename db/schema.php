@@ -15,10 +15,12 @@ title TEXT NOT NULL,
 slug TEXT UNIQUE NOT NULL,
 content TEXT NOT NULL,
 type TEXT DEFAULT 'default',
-status TEXT DEFAULT 'draft',
+status TEXT NOT NULL DEFAULT 'draft' CHECK(status IN ('published','draft','trash')),
 created_at TEXT DEFAULT CURRENT_TIMESTAMP,
 updated_at TEXT DEFAULT CURRENT_TIMESTAMP
 );
+CREATE INDEX IF NOT EXISTS idx_pages_status ON pages(status);
+CREATE INDEX IF NOT EXISTS idx_pages_updated_at ON pages(updated_at);
 
 CREATE TABLE IF NOT EXISTS media (
 id INTEGER PRIMARY KEY AUTOINCREMENT,

@@ -1,16 +1,20 @@
 <?php
 require_once __DIR__ . '/../../../bootstrap.php';
 
-/*
- * Load required modules using lazy loading
- */
-use function DuckyCMS\dcms_require_module;
-dcms_require_module('db');
-dcms_require_module('templates');
-
 use function DuckyCMS\DB\dcms_create_page;
 use function DuckyCMS\dcms_get_base_url;
-use function DuckyCMS\Setup\dcms_render_setup_layout;
+use function DuckyCMS\dcms_require_login;
+use function DuckyCMS\dcms_require_module;
+use function DuckyCMS\Setup\dcms_render_dashboard_layout;
+
+/**
+ * Require auth, db, and templates
+ */
+dcms_require_module('db');
+dcms_require_module('templates');
+dcms_require_module('auth');
+dcms_require_module('admin');
+dcms_require_login();
 
 $message = '';
 $title   = '';
@@ -36,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-$pages_url = dcms_get_base_url() . 'admin/pages/';
+$pages_url = dcms_get_base_url() . 'admin/pages/?status=draft';
 
 ob_start();
 ?>
@@ -56,6 +60,4 @@ ob_start();
     <button type="submit">Create Page</button>
   </form>
 <?php
-$page_content = ob_get_clean();
-
-dcms_render_setup_layout('Create Page', $page_content);
+dcms_render_dashboard_layout('Create Page', ob_get_clean(), 'create-page');

@@ -93,6 +93,151 @@ function dcms_get_all_pages(?string $db_path = null): array
 }
 
 /**
+ * Allowed page statuses helper
+ *
+ * @return array
+ */
+function dcms_allowed_statuses(): array
+{
+  return ['published', 'draft', 'trash'];
+}
+
+/**
+ * Normalize and validate a status. Defaults to 'published' when invalid.
+ *
+ * @param string|null $status
+ * @return string
+ */
+function dcms_normalize_status(?string $status): string
+{
+  $s = is_string($status) ? strtolower(trim($status)) : '';
+  return in_array($s, dcms_allowed_statuses(), true) ? $s : 'published';
+}
+
+/**
+ * Count pages grouped by status.
+ * Returns an associative array with keys for every allowed status.
+ *
+ * @param string|null $db_path
+ * @return array
+ */
+function dcms_get_page_counts_by_status(?string $db_path = null): array
+{
+  $counts = array_fill_keys(dcms_allowed_statuses(), 0);
+  try {
+    $placeholders = implode(',', array_fill(0, count($counts), '?'));
+    $stmt = execute_query(
+      "SELECT status, COUNT(*) AS c FROM pages WHERE status IN ($placeholders) GROUP BY status",
+      dcms_allowed_statuses(),
+      $db_path
+    );
+    foreach ($stmt as $row) {
+      $status = $row['status'] ?? null;
+      if ($status !== null && array_key_exists($status, $counts)) {
+        $counts[$status] = (int)$row['c'];
+      }
+    }
+  } catch (PDOException $e) {
+    // If the schema is missing the 'status' column, surface a clear hint.
+    throw new PDOException("Page status column missing. Add a 'status' TEXT column to pages.");
+  }
+  return $counts;
+}
+
+/**
+ * Get total pages for a given status, for pagination.
+ *
+ * @param string $status
+ * @param string|null $db_path
+ * @return int
+ */
+function dcms_count_pages_by_status(string $status, ?string $db_path = null): int
+{
+  $status = dcms_normalize_status($status);
+  try {
+    $row = fetch_single("SELECT COUNT(*) AS c FROM pages WHERE status = :status", [':status' => $status], $db_path);
+    return $row ? (int)$row['c'] : 0;
+  } catch (PDOException $e) {
+    throw new PDOException("Page status column missing. Add a 'status' TEXT column to pages.");
+  }
+}
+
+/**
+ * Fetch pages by status with pagination.
+ * Uses prepared statement with integer-bound LIMIT/OFFSET for SQLite.
+ *
+ * @param string $status
+ * @param int $limit
+ * @param int $offset
+ * @param string|null $db_path
+ * @return array
+ */
+function dcms_get_pages_by_status(string $status, int $limit = 25, int $offset = 0, ?string $db_path = null): array
+{
+  $status = dcms_normalize_status($status);
+
+  try {
+    $pdo = get_db_connection($db_path);
+    $sql = "SELECT id, title, slug FROM pages WHERE status = :status ORDER BY id DESC LIMIT :limit OFFSET :offset";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  } catch (PDOException $e) {
+    throw new PDOException("Page status column missing. Add a 'status' TEXT column to pages.");
+  }
+}
+
+/**
+ * Move a page to trash.
+ *
+ * @param int $id
+ * @param string|null $db_path
+ * @return bool
+ */
+function dcms_move_page_to_trash(int $id, ?string $db_path = null): bool
+{
+  try {
+    $stmt = execute_query("UPDATE pages SET status = 'trash' WHERE id = :id", [':id' => $id], $db_path);
+    return $stmt->rowCount() > 0;
+  } catch (PDOException $e) {
+    throw new PDOException("Page status column missing. Add a 'status' TEXT column to pages.");
+  }
+}
+
+/**
+ * Restore a trashed page to draft.
+ *
+ * @param int $id
+ * @param string|null $db_path
+ * @return bool
+ */
+function dcms_restore_page(int $id, ?string $db_path = null): bool
+{
+  try {
+    $stmt = execute_query("UPDATE pages SET status = 'draft' WHERE id = :id", [':id' => $id], $db_path);
+    return $stmt->rowCount() > 0;
+  } catch (PDOException $e) {
+    throw new PDOException("Page status column missing. Add a 'status' TEXT column to pages.");
+  }
+}
+
+/**
+ * Delete a page permanently.
+ *
+ * @param int $id
+ * @param string|null $db_path
+ * @return bool
+ */
+function dcms_delete_page_forever(int $id, ?string $db_path = null): bool
+{
+  $stmt = execute_query("DELETE FROM pages WHERE id = :id", [':id' => $id], $db_path);
+  return $stmt->rowCount() > 0;
+}
+
+/**
  * Get a page by ID
  *
  * @param int $id
