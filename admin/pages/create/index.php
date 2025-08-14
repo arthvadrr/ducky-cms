@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../../bootstrap.php';
+require_once __DIR__ . '/../../../bootstrap.php';
 
 /*
  * Load required modules using lazy loading
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = dcms_create_page($title, $slug, $content);
 
     if (is_int($result)) {
-      header("Location: " . dcms_get_base_url() . "admin/edit/?id=$result");
+      header("Location: " . dcms_get_base_url() . "admin/pages/edit/?id=$result");
       exit();
     }
 
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   }
 }
 
-$pages_url = dcms_get_base_url() . 'admin/pages-index/';
+$pages_url = dcms_get_base_url() . 'admin/pages/';
 
 ob_start();
 ?>
