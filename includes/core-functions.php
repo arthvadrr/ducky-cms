@@ -65,7 +65,8 @@ function dcms_require_module(string $module): bool {
         'files' => [
           DUCKY_ROOT . '/partials/alert.php',
           DUCKY_ROOT . '/partials/ducky-cms-logo.php',
-          DUCKY_ROOT . '/partials/menu-item.php'
+          DUCKY_ROOT . '/partials/menu-item.php',
+          DUCKY_ROOT . '/partials/menu.php'
         ]
       ]
     ];

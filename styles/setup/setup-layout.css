@@ -1,3 +1,6 @@
+/*
+ * Setup layout: centered content panel and basic page structure
+ */
 body {
   font-family : "Montserrat", sans-serif;
   color       : var(--color-gray-light);

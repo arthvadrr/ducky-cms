@@ -1,3 +1,6 @@
+/*
+ * Shared typography: base sizes, headings, branding title
+ */
 html {
   font-size   : clamp(1.2rem, 2vw, 1.4rem);
   line-height : 1.6;

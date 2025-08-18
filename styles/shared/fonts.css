@@ -1,3 +1,6 @@
+/*
+ * Webfont declarations (Montserrat)
+ */
 @font-face {
   font-family: "Montserrat";
   src: url("/assets/fonts/montserrat-300.woff2") format("truetype");

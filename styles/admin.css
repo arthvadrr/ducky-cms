@@ -1,7 +1,12 @@
+/*
+ * Admin styles entry bundle
+ * - Imports shared and admin modules in cascade order
+ */
 @import "shared/vars.css";
 @import "shared/fonts.css";
 @import "shared/typography.css";
 @import "admin/admin-layout.css";
+@import "admin/admin-menu.css";
 @import "shared/util.css";
 @import "shared/forms.css";
 @import "shared/animations.css";

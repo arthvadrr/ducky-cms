@@ -1,3 +1,6 @@
+/*
+ * Shared CSS variables (design tokens)
+ */
 :root {
   --font-body: Montserrat;
   --font-heading: Montserrat;

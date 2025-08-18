@@ -54,27 +54,33 @@ function dcms_menu_item(array $options): string
   $width     = (int)($options['width'] ?? 24);
   $isCurrent = (bool)($options['is_current'] ?? false);
   $href      = (string)($options['href'] ?? '#');
+  $extraClass = trim((string)($options['extra_class'] ?? ''));
+  $extraAttrs = (string)($options['attrs'] ?? ''); // raw attributes string, built by caller with proper escaping
 
   /**
-   * Validate the enum value
+   * Resolve icon key: prefer explicit 'icon' if provided, otherwise match from name
    */
-  $iconEnum = MenuIcon::tryFrom(strtolower($nameRaw));
+  $iconKey = $options['icon'] ?? null;
+  $iconEnum = null;
+  if (is_string($iconKey) && $iconKey !== '') {
+    $iconEnum = MenuIcon::tryFrom(strtolower($iconKey));
+  }
+  if (!$iconEnum) {
+    $iconEnum = MenuIcon::tryFrom(strtolower($nameRaw));
+  }
   if (!$iconEnum) {
     return '';
   }
 
   $iconSvg     = $iconEnum->svg($width);
-  $class       = 'menu-item' . ($isCurrent ? ' is-current' : '');
+  $class       = trim('menu-item' . ($isCurrent ? ' is-current' : '') . ($extraClass !== '' ? ' ' . $extraClass : ''));
   $ariaCurrent = $isCurrent ? ' aria-current="page"' : '';
-
-  // Use a single template. Choose tag and attributes once.
-  $tag      = $isCurrent ? 'div' : 'a';
-  $hrefAttr = $isCurrent ? '' : ' href="' . htmlspecialchars($href, ENT_QUOTES) . '"';
+  $hrefAttr = ' href="' . htmlspecialchars($href, ENT_QUOTES) . '"';
 
   return <<<HTML
-    <$tag $hrefAttr class="$class" role="menuitem" $ariaCurrent>
+    <a{$hrefAttr} class="$class" role="menuitem"$ariaCurrent $extraAttrs>
       {$iconSvg}
       <span class="menu-name">$name</span>
-    </$tag>
+    </a>
   HTML;
 }

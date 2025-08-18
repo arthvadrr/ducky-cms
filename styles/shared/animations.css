@@ -1,3 +1,6 @@
+/*
+ * Shared animations: content rise-up sequence
+ */
 main > *:not(h1) {
   --delay: 0ms;
   animation: rise-up 0.4s ease-out forwards;

@@ -1,0 +1,154 @@
+/*
+ * Admin menu: primary navigation and animated desktop submenu
+ *
+ * Primary navigation block
+ */
+aside {
+  nav {
+    flex-grow: 1;
+    background-color: var(--color-bg-dark);
+
+    .nav-inner {
+      ul {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+          width: 100%;
+
+          a, div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0.6rem 0.12rem;
+            text-decoration: none;
+            color: var(--color-text-light);
+            font-size: 0.65rem;
+            border-bottom: 1px solid var(--color-border-dark);
+
+            &[aria-current="page"] {
+              cursor: default;
+              background-color: var(--color-bg-medium);
+            }
+
+            svg {
+              fill: #fff;
+              margin-bottom: 0.25rem;
+              transition: fill 0.2s ease;
+            }
+
+            &:not([aria-current="page"]):hover {
+              background-color: var(--color-accent-primary-alpha);
+
+              span {
+                color: var(--color-accent-primary);
+              }
+
+              svg .primary {
+                fill: var(--color-accent-primary);
+              }
+
+              svg .secondary {
+                fill: var(--color-accent-primary-alpha);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/*
+ * Two-level submenu (desktop-only behavior, no JS)
+ */
+@media (hover: hover) and (pointer: fine) {
+  aside {
+    nav {
+      .nav-inner {
+        ul {
+          li {
+            position: relative;
+
+            > ul.submenu {
+              /* Use animated reveal instead of display toggle (desktop-only) */
+              display: block; /* keep in flow for transition */
+              position: static; /* stacked vertical menu in sidebar */
+              list-style: none;
+              margin: 0;
+              padding: 0;
+              background-color: var(--color-bg-dark);
+
+              /* Collapsed state */
+              max-height: 0;
+              opacity: 0;
+              visibility: hidden;
+              pointer-events: none;
+              overflow: hidden;
+              transform-origin: top;
+              transform: translateY(-4px);
+              transition: max-height 220ms ease, opacity 180ms ease, transform 220ms ease;
+
+              /* Submenu item styles */
+              li {
+                a {
+                  display: block;
+                  padding: 0.5rem 0.5rem;
+                  font-size: 0.62rem;
+                  color: var(--color-text-light);
+                  text-align: left;
+                  border-bottom: 1px solid var(--color-border-dark);
+
+                  &[aria-current="page"] {
+                    cursor: default;
+                    background-color: var(--color-bg-medium);
+                  }
+
+                  &:hover {
+                    background-color: var(--color-accent-primary-alpha);
+                    color: var(--color-accent-primary);
+                  }
+                }
+              }
+            }
+
+            &.has-children {
+              &.is-open > ul.submenu,
+              &:hover > ul.submenu,
+              &:focus-within > ul.submenu {
+                max-height: 100vh; /* Allows animation */
+                opacity: 1;
+                visibility: visible;
+                pointer-events: auto;
+                transform: translateY(0);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /*
+   * Reduced motion override
+   */
+  @media (prefers-reduced-motion: reduce) {
+    aside {
+      nav {
+        .nav-inner {
+          ul {
+            li {
+              > ul.submenu {
+                transition: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

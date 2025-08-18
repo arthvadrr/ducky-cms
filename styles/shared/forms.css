@@ -1,3 +1,6 @@
+/*
+ * Shared forms: inputs, labels, layout
+ */
 form {
   display            : grid;
   grid-template-rows : 1fr;
