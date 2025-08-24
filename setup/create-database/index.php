@@ -5,13 +5,12 @@ namespace DuckyCMS\Setup;
 use DuckyCMS\AlertType;
 use PDOException;
 use Random\RandomException;
-use function DuckyCMS\DB\create_setup_nonce;
 use function DuckyCMS\DB\initialize_database;
+use function DuckyCMS\DB\set_setting;
 use function DuckyCMS\dcms_alert;
 use function DuckyCMS\dcms_db_exists;
 use function DuckyCMS\dcms_get_base_url;
-
-define('NONCE_INITIAL_USED_STATE', 0);
+use function DuckyCMS\dcms_require_module;
 
 if (realpath(__FILE__) !== realpath($_SERVER['SCRIPT_FILENAME'])) {
   exit('Nope.');
@@ -22,16 +21,12 @@ require_once dirname(__DIR__, 2) . '/bootstrap.php';
 /*
  * Load required modules using lazy loading
  */
-use function DuckyCMS\dcms_require_module;
+
 dcms_require_module('db');
 dcms_require_module('templates');
 dcms_require_module('partials');
 
 session_start();
-
-if (isset($_SESSION['db_path']) && !file_exists($_SESSION['db_path'])) {
-  unset($_SESSION['db_path']);
-}
 
 function dcms_create_db(): string
 {
@@ -40,40 +35,65 @@ function dcms_create_db(): string
     $db_path = DUCKY_ROOT . "/db/$db_name";
 
     if (file_exists($db_path)) {
-      return '<p>Database already exists.</p>';
+      return dcms_alert('Database already exists.', AlertType::warning);
     }
 
     if (!is_dir(dirname($db_path)) && !mkdir(dirname($db_path), 0755, true)) {
-      return '<p>Failed to create database directory.</p>';
+      return dcms_alert('Failed to create database directory.', AlertType::danger);
     }
 
     try {
       initialize_database(require DUCKY_ROOT . '/db/schema.php', $db_path);
 
-      try {
-        $nonce      = bin2hex(random_bytes(32));
-        $created_at = time();
-
-        create_setup_nonce($nonce, $created_at, NONCE_INITIAL_USED_STATE, $db_path);
-
-        $_SESSION['setup_nonce'] = $nonce;
-        $_SESSION['db_path']     = $db_path;
-      } catch (RandomException $e) {
-        return '<p>Error: ' . htmlspecialchars($e->getMessage()) . '</p>';
+      /**
+       * If a site URL was provided earlier in the setup, persist it now that the DB exists
+       */
+      if (!empty($_SESSION['pending_site_url'])) {
+        try {
+          set_setting('site_url', (string)$_SESSION['pending_site_url'], $db_path);
+        } catch (PDOException) {
+          // Non-fatal: continue setup even if site_url fails to persist here
+        }
+        unset($_SESSION['pending_site_url']);
       }
 
-      $next_url = dcms_get_base_url() . 'setup/set-site-url/';
-      return '<p>Database created successfully!</p> <a class="button" href="' . $next_url . '">Continue to Set Site URL</a>';
+      /**
+       * After successful DB init, generate one-time setup token and store only its hash, expiry, and used flag in settings.
+       */
+      try {
+        $token        = bin2hex(random_bytes(32));
+        $token_hash   = hash('sha256', $token);
+        $token_expiry = (string)(time() + 900); // 15 minutes expiry
+
+        set_setting('setup_token_hash', $token_hash, $db_path);
+        set_setting('setup_token_expiry', $token_expiry, $db_path);
+        set_setting('setup_token_used', '0', $db_path);
+
+        /**
+         * Bind minimal context to session if needed later (no token value stored)
+         */
+        $_SESSION['db_initialized'] = true;
+
+        /**
+         * Redirect immediately to create-admin page with token in query
+         */
+        $redirect = dcms_get_base_url() . 'setup/create-admin-user/?token=' . urlencode($token);
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+        header('Pragma: no-cache');
+        header('Location: ' . $redirect);
+        exit;
+      } catch (RandomException $e) {
+        return dcms_alert('Error: ' . $e->getMessage(), AlertType::danger);
+      }
     } catch (PDOException $e) {
-      return '<p>Error: ' . htmlspecialchars($e->getMessage()) . '</p>';
+      return dcms_alert('Error: ' . $e->getMessage(), AlertType::danger);
     }
   }
 
   return '';
 }
 
-$message      = dcms_create_db();
-$set_site_url = dcms_get_base_url() . 'setup/set-site-url/';
+$message = dcms_create_db();
 
 ob_start();
 
@@ -88,7 +108,7 @@ echo $message;
 
 if (dcms_db_exists() && empty($message)) : ?>
   <?= dcms_alert('Database already exists.', AlertType::warning) ?>
-  <a class="button" href="<?= $set_site_url ?>">Continue to Set Site URL</a>
+  <a class="button" href="<?= dcms_get_base_url() . 'auth/login/' ?>">Continue to Login</a>
 <?php endif;
 
 dcms_render_setup_layout('Create SQLite Database', ob_get_clean());
