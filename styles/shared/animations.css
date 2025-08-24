@@ -2,27 +2,82 @@
  * Shared animations: content rise-up sequence
  */
 main > *:not(h1) {
-  --delay: 0ms;
-  animation: rise-up 0.4s ease-out forwards;
-  animation-delay: var(--delay);
-  opacity: 0;
-  transform: translateY(20px);
+  --delay         : 0ms;
+  animation       : rise-up 0.4s ease-out forwards;
+  animation-delay : var(--delay);
+  opacity         : 0;
+  transform       : translateY(20px);
 }
 
-main > *:nth-child(1) { --delay: 0ms; }
-main > *:nth-child(2) { --delay: 80ms; }
-main > *:nth-child(3) { --delay: 160ms; }
-main > *:nth-child(4) { --delay: 240ms; }
-main > *:nth-child(5) { --delay: 320ms; }
-main > *:nth-child(6) { --delay: 400ms; }
+main .alert {
+  animation-delay : var(--delay), calc(var(--delay) + 200ms);
+  animation-duration : 0.4s, 700ms;
+
+  &.alert-danger,
+  &.alert-warning {
+    animation-name     : rise-up, alert-warning;
+  }
+
+  &.alert-success {
+    animation-name     : rise-up, alert-success;
+  }
+}
+
+main > *:nth-child(1) {
+  --delay : 0ms;
+}
+
+main > *:nth-child(2) {
+  --delay : 80ms;
+}
+
+main > *:nth-child(3) {
+  --delay : 160ms;
+}
+
+main > *:nth-child(4) {
+  --delay : 240ms;
+}
+
+main > *:nth-child(5) {
+  --delay : 320ms;
+}
+
+main > *:nth-child(6) {
+  --delay : 400ms;
+}
 
 @keyframes rise-up {
   from {
-    transform: translateY(20px);
-    opacity: 0;
+    transform : translateY(20px);
+    opacity   : 0;
   }
   to {
-    transform: translateY(0);
-    opacity: 1;
+    transform : translateY(0);
+    opacity   : 1;
+  }
+}
+
+@keyframes alert-warning {
+  20%, 80% {
+    transform : rotateZ(0) scale(1);
+  }
+  35% {
+    transform : rotateZ(-1deg) scale(1.02);
+  }
+  50% {
+    transform : rotateZ(1deg) scale(1.02);
+  }
+  65% {
+    transform : rotateZ(-1deg) scale(1.02);
+  }
+}
+
+@keyframes alert-success {
+  20%, 80% {
+    transform: scale(1);
+  }
+  35%, 65% {
+    transform: scale(1.02);
   }
 }
