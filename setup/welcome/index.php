@@ -23,7 +23,7 @@ use DuckyCMS\AlertType;
 
 $has_db        = dcms_db_exists();
 $base_url      = dcms_get_base_url();
-$create_db_url = $base_url . 'setup/create-database/';
+$create_db_url = $base_url . 'setup/set-site-url/';
 $login_url     = $base_url . 'auth/login/';
 
 ob_start();
