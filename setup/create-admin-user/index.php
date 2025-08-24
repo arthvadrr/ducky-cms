@@ -5,13 +5,16 @@
 
 namespace DuckyCMS\Setup;
 
-use PDOException;
-use function DuckyCMS\DB\create_user;
-use function DuckyCMS\DB\get_setup_nonce;
-use function DuckyCMS\DB\mark_setup_nonce_used;
-use function DuckyCMS\dcms_get_base_url;
-use function DuckyCMS\dcms_alert;
 use DuckyCMS\AlertType;
+use Exception;
+use PDOException;
+use Random\RandomException;
+use function DuckyCMS\DB\create_user;
+use function DuckyCMS\DB\get_setting;
+use function DuckyCMS\DB\set_setting;
+use function DuckyCMS\dcms_alert;
+use function DuckyCMS\dcms_get_base_url;
+use function DuckyCMS\dcms_require_module;
 
 /**
  * Exit if not accessed directly.
@@ -25,34 +28,69 @@ require_once dirname(__DIR__, 2) . '/bootstrap.php';
 /*
  * Load required modules using lazy loading
  */
-use function DuckyCMS\dcms_require_module;
+
 dcms_require_module('db');
 dcms_require_module('templates');
 dcms_require_module('partials');
 
 /**
- * Make session available if it exists and make sure we have a db path from step 1.
+ * Session and one-time setup token validation.
+ * If token is in the URL, validate it against settings (hash match, not used, not expired),
+ * then bind to session and redirect to the same page without the token.
  */
 session_start();
 
-$db_path = $_SESSION['db_path'] ?? null;
-$nonce   = $_SESSION['setup_nonce'] ?? null;
-
-if (!$db_path || !$nonce || !file_exists($db_path)) {
-  header('Location: ' . dcms_get_base_url() . 'auth/login/');
-  exit;
-}
+$token_in_url = $_GET['token'] ?? '';
 
 try {
-  $row = get_setup_nonce($nonce, $db_path);
+  if ($token_in_url) {
+    $stored_hash   = get_setting('setup_token_hash');
+    $stored_expiry = (int)(get_setting('setup_token_expiry') ?? 0);
+    $stored_used   = (int)(get_setting('setup_token_used') ?? 0);
 
-  if (!$row || $row['used'] || $row['created_at'] < (time() - 86400)) {
-    header('Location: ' . dcms_get_base_url() . 'auth/login/');
-    exit;
+    $incoming_hash = hash('sha256', $token_in_url);
+
+    if ($stored_hash && hash_equals($stored_hash, $incoming_hash) && $stored_used === 0 && $stored_expiry > time()) {
+      /**
+       * Valid token: bind to session and redirect without token in URL
+       */
+      $_SESSION['setup_token_valid'] = true;
+
+      /**
+       * Regenerate session ID to prevent fixation
+       */
+      session_regenerate_id(true);
+      $redirect_url = strtok($_SERVER['REQUEST_URI'], '?');
+      header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+      header('Pragma: no-cache');
+      header('Location: ' . $redirect_url);
+      exit;
+    } else {
+      /**
+       * Invalid token in URL: show alert and do not allow proceeding
+       */
+      $invalid_token_alert = dcms_alert('The setup link is invalid or has expired. Please create the database again to get a new link.', AlertType::danger);
+    }
   }
-} catch (PDOException $e) {
-  header('Location: ' . dcms_get_base_url() . 'auth/login/');
-  exit($e);
+} catch (PDOException) {
+  $invalid_token_alert = dcms_alert('Database error while validating setup link.', AlertType::danger);
+}
+
+$can_proceed = !empty($_SESSION['setup_token_valid']);
+
+/**
+ * Ensure CSRF token exists for the setup form
+ */
+if ($can_proceed && empty($_SESSION['csrf_token'])) {
+  try {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+  } catch (Exception) {
+    try {
+      $_SESSION['csrf_token'] = bin2hex(random_bytes(16));
+    } catch (RandomException) {
+      die();
+    }
+  }
 }
 
 /**
@@ -62,12 +100,27 @@ try {
  */
 function dcms_create_admin_user(): array
 {
+  global $can_proceed;
+
   if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     return ['message' => '', 'success' => false];
   }
 
-  $username = trim($_POST['username']);
-  $password = $_POST['password'];
+  if (!$can_proceed) {
+    return ['message' => dcms_alert('Access denied. Missing or invalid setup token.', AlertType::danger), 'success' => false];
+  }
+
+  /**
+   * CSRF verification
+   */
+  $csrf    = $_POST['csrf'] ?? '';
+  $csrf_ok = isset($_SESSION['csrf_token']) && is_string($csrf) && hash_equals($_SESSION['csrf_token'], $csrf);
+  if (!$csrf_ok) {
+    return ['message' => dcms_alert('Security check failed. Please reload the page and try again.', AlertType::danger), 'success' => false];
+  }
+
+  $username = trim($_POST['username'] ?? '');
+  $password = $_POST['password'] ?? '';
 
   if (!$username || !$password) {
     return ['message' => dcms_alert('Username and password are both required.', AlertType::danger), 'success' => false];
@@ -81,20 +134,27 @@ function dcms_create_admin_user(): array
     return ['message' => dcms_alert('Password must be between 12 and 128 characters.', AlertType::danger), 'success' => false];
   }
 
-  global $nonce, $db_path;
-
   $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
   try {
-    create_user($username, $hashed_password, $db_path);
-    mark_setup_nonce_used($nonce, $db_path);
+    create_user($username, $hashed_password);
+
+    /**
+     * Mark token as used and clear token data from settings/session
+     */
+    set_setting('setup_token_used', '1');
+    set_setting('setup_token_hash', '');
+    set_setting('setup_token_expiry', '0');
+    unset($_SESSION['setup_token_valid']);
+    unset($_SESSION['csrf_token']);
+
     return ['message' => dcms_alert('Admin user created successfully!', AlertType::success), 'success' => true];
   } catch (PDOException $e) {
     return ['message' => dcms_alert('Error creating user: ' . $e->getMessage(), AlertType::danger), 'success' => false];
   }
 }
 
-$result = dcms_create_admin_user();
+$result  = dcms_create_admin_user();
 $message = $result['message'];
 $success = $result['success'];
 
@@ -107,21 +167,32 @@ ob_start();
         <a href="<?= dcms_get_base_url() ?>auth/login/" class="button">Continue to Login</a>
       </div>
     <?php else: ?>
-      <p>Pick a <strong>username</strong> and a <strong>password</strong>.</p>
-      <?php if (!empty($message)) echo $message; ?>
-      <form method="post">
-        <div>
-          <label for="username">Username</label>
-          <small id="username-help" class="form-text text-muted">Must be between 6 and 32 characters.</small>
-          <input id="username" name="username" type="text" placeholder="ducky_admin" autocomplete="off" required aria-describedby="username-help">
+      <?php if (isset($invalid_token_alert)) echo $invalid_token_alert; ?>
+      <?php if ($can_proceed): ?>
+        <p>Pick a <strong>username</strong> and a <strong>password</strong>.</p>
+        <?php if (!empty($message)) echo $message; ?>
+        <form method="post">
+          <input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>"/>
+          <div>
+            <label for="username">Username</label>
+            <small id="username-help" class="form-text text-muted">Must be between 6 and 32 characters.</small>
+            <input id="username" name="username" type="text" placeholder="ducky_admin" autocomplete="off" required
+                   aria-describedby="username-help">
+          </div>
+          <div>
+            <label for="password">Password</label>
+            <small id="password-help" class="form-text text-muted">Must be between 12 and 128 characters.</small>
+            <input id="password" name="password" type="password" placeholder="••••••••••••" autocomplete="off" required
+                   aria-describedby="password-help">
+          </div>
+          <button class="button" type="submit">Create User</button>
+        </form>
+      <?php else: ?>
+        <?= dcms_alert('Access to create admin is blocked. The setup token is missing, invalid, expired, or already used.', AlertType::warning) ?>
+        <div style="margin-top: 1rem;">
+          <a href="<?= dcms_get_base_url() ?>setup/welcome/" class="button outline small">Back to Setup</a>
         </div>
-        <div>
-          <label for="password">Password</label>
-          <small id="password-help" class="form-text text-muted">Must be between 12 and 128 characters.</small>
-          <input id="password" name="password" type="password" placeholder="••••••••••••" autocomplete="off" required aria-describedby="password-help">
-        </div>
-        <button class="button" type="submit">Create User</button>
-      </form>
+      <?php endif; ?>
     <?php endif; ?>
   </section>
   <?php
