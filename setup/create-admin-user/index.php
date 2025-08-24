@@ -115,6 +115,7 @@ function dcms_create_admin_user(): array
    */
   $csrf    = $_POST['csrf'] ?? '';
   $csrf_ok = isset($_SESSION['csrf_token']) && is_string($csrf) && hash_equals($_SESSION['csrf_token'], $csrf);
+
   if (!$csrf_ok) {
     return ['message' => dcms_alert('Security check failed. Please reload the page and try again.', AlertType::danger), 'success' => false];
   }
@@ -148,7 +149,7 @@ function dcms_create_admin_user(): array
     unset($_SESSION['setup_token_valid']);
     unset($_SESSION['csrf_token']);
 
-    return ['message' => dcms_alert('Admin user created successfully!', AlertType::success), 'success' => true];
+    return ['message' => dcms_alert('Database and admin user created successfully!', AlertType::success), 'success' => true];
   } catch (PDOException $e) {
     return ['message' => dcms_alert('Error creating user: ' . $e->getMessage(), AlertType::danger), 'success' => false];
   }

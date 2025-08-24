@@ -51,8 +51,8 @@ function dcms_create_db(): string
       if (!empty($_SESSION['pending_site_url'])) {
         try {
           set_setting('site_url', (string)$_SESSION['pending_site_url'], $db_path);
-        } catch (PDOException) {
-          // Non-fatal: continue setup even if site_url fails to persist here
+        } catch (PDOException $e) {
+          error_log($e);
         }
         unset($_SESSION['pending_site_url']);
       }
