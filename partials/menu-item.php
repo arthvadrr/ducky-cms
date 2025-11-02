@@ -55,10 +55,15 @@ function dcms_menu_item(array $options): string
   $isCurrent = (bool)($options['is_current'] ?? false);
   $href      = (string)($options['href'] ?? '#');
   $extraClass = trim((string)($options['extra_class'] ?? ''));
-  $extraAttrs = (string)($options['attrs'] ?? ''); // raw attributes string, built by caller with proper escaping
+  /**
+   * Raw attributes string, built by caller with proper escaping
+   */
+  $extraAttrs = (string)($options['attrs'] ?? '');
+  $element    = strtolower((string)($options['element'] ?? 'a'));
+  $element = in_array($element, ['a','button','summary'], true) ? $element : 'a';
 
   /**
-   * Resolve icon key: prefer explicit 'icon' if provided, otherwise match from name
+   * Resolve icon key
    */
   $iconKey = $options['icon'] ?? null;
   $iconEnum = null;
@@ -75,10 +80,31 @@ function dcms_menu_item(array $options): string
   $iconSvg     = $iconEnum->svg($width);
   $class       = trim('menu-item' . ($isCurrent ? ' is-current' : '') . ($extraClass !== '' ? ' ' . $extraClass : ''));
   $ariaCurrent = $isCurrent ? ' aria-current="page"' : '';
+
+  if ($element === 'button') {
+    return <<<HTML
+      <button type="button" class="$class"$ariaCurrent $extraAttrs>
+        {$iconSvg}
+        <span class="menu-name">$name</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </button>
+    HTML;
+  }
+
+  if ($element === 'summary') {
+    return <<<HTML
+      <summary class="$class"$ariaCurrent $extraAttrs>
+        {$iconSvg}
+        <span class="menu-name">$name</span>
+        <span class="chevron" aria-hidden="true"></span>
+      </summary>
+    HTML;
+  }
+
   $hrefAttr = ' href="' . htmlspecialchars($href, ENT_QUOTES) . '"';
 
   return <<<HTML
-    <a{$hrefAttr} class="$class" role="menuitem"$ariaCurrent $extraAttrs>
+    <a{$hrefAttr} class="$class"$ariaCurrent $extraAttrs>
       {$iconSvg}
       <span class="menu-name">$name</span>
     </a>

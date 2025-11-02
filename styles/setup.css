@@ -1,6 +1,6 @@
 /*
  * Setup styles entry bundle
- * - Imports shared tokens and setup layout styles
+ * Imports shared tokens and setup layout styles
  */
 @import "shared/vars.css";
 @import "shared/fonts.css";

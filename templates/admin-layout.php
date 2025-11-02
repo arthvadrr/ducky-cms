@@ -24,7 +24,6 @@ function dcms_render_dashboard_layout(
   $dashboard_url = $base_url . 'admin/';
   $pages_url     = $base_url . 'admin/pages/';
   $settings_url  = $base_url . 'admin/settings/';
-  $logout_url    = $base_url . 'auth/logout/';
   ?>
   <!DOCTYPE html>
   <html lang="en" style="background-color:#23272d;">
@@ -47,16 +46,21 @@ function dcms_render_dashboard_layout(
         <?= dcms_render_menu([
           [
             'name'       => 'Dashboard',
-            'width'      => 25,
+            'width'      => 24,
             'href'       => $dashboard_url,
-            'is_current' => ($current_menu_item === 'dashboard')
+            'is_current' => ($current_menu_item === 'dashboard'),
           ],
           [
             'name'       => 'Pages',
-            'width'      => 25,
+            'width'      => 24,
             'href'       => $pages_url,
-            'is_current' => in_array($current_menu_item, ['pages','pages-create','pages-drafts','pages-trash'], true),
+            'is_current' => in_array($current_menu_item, ['pages','pages-create','pages-drafts','pages-trash','pages-published'], true),
             'children'   => [
+              [
+                'name'       => 'All Pages',
+                'href'       => $pages_url,
+                'is_current' => ($current_menu_item === 'pages'),
+              ],
               [
                 'name'       => 'Create Page',
                 'href'       => $pages_url . 'create/',
@@ -78,22 +82,14 @@ function dcms_render_dashboard_layout(
                 'is_current' => ($current_menu_item === 'pages-trash'),
               ],
             ],
-          ]
-        ])
-        ?>
-        <?= dcms_render_menu([
+          ],
           [
             'name'       => 'Settings',
-            'width'      => 25,
+            'width'      => 24,
             'href'       => $settings_url,
-            'is_current' => ($current_menu_item === 'settings')
+            'is_current' => ($current_menu_item === 'settings'),
           ],
-          [
-            'name'  => 'Logout',
-            'width' => 25,
-            'href'  => $logout_url,
-          ],
-        ]);
+        ])
         ?>
       </div>
     </nav>
@@ -101,6 +97,27 @@ function dcms_render_dashboard_layout(
   <main>
     <?= $content ?>
   </main>
+  <script>
+    (function(){
+      var container = document.querySelector('aside nav .nav-inner');
+      if (!container) return;
+      /**
+       * Enhance details for accessibility only (no accordion behavior):
+       * - Allow Esc to close the currently focused section.
+       */
+      var detailsList = container.querySelectorAll('ul > li.has-children > details');
+      detailsList.forEach(function(d){
+        d.addEventListener('keydown', function(e){
+          if (e.key === 'Escape'){
+            d.removeAttribute('open');
+            var sum = d.querySelector('summary');
+            if (sum) sum.focus();
+          }
+        });
+      });
+    })();
+  </script>
+  <script type="module" src="<?= $base_url . 'src/js/app.js' ?>"></script>
   </body>
   </html>
   <?php

@@ -31,7 +31,9 @@ function dcms_render_menu(array $items): string
     $children = $item['children'] ?? [];
     $hasChildren = is_array($children) && !empty($children);
 
-    // Check if any child is marked current
+    /**
+     * Check if any child is marked current
+     */
     $childCurrent = false;
     if ($hasChildren) {
       foreach ($children as $child) {
@@ -46,28 +48,25 @@ function dcms_render_menu(array $items): string
 
     $liClasses = [];
     if ($hasChildren) { $liClasses[] = 'has-children'; }
-    if ($isOpen) { $liClasses[] = 'is-open'; }
     $liClassAttr = !empty($liClasses) ? ' class="' . implode(' ', $liClasses) . '"' : '';
 
     $html .= '<li' . $liClassAttr . '>';
 
-    // ARIA attributes for parents with children
-    $parentAttrs = '';
     if ($hasChildren) {
-      $parentAttrs = 'aria-haspopup="true" aria-expanded="' . ($isOpen ? 'true' : 'false') . '"';
-    }
+      $openAttr = $isOpen ? ' open' : '';
+      $html .= '<details' . $openAttr . '>';
 
-    $html .= dcms_menu_item([
-      'name'       => $name,
-      'href'       => $href,
-      'is_current' => $isCurrent,
-      'width'      => $width,
-      'icon'       => $icon,
-      'attrs'      => $parentAttrs,
-    ]);
+      $html .= dcms_menu_item([
+        'name'       => $name,
+        'href'       => $href,
+        'is_current' => $isCurrent,
+        'width'      => $width,
+        'icon'       => $icon,
+        'attrs'      => '',
+        'element'    => 'summary',
+      ]);
 
-    if ($hasChildren) {
-      $html .= '<ul class="submenu">';
+      $html .= '<ul class="submenu" role="list" aria-label="' . htmlspecialchars($name) . ' submenu">';
 
       foreach ($children as $child) {
         if (!is_array($child)) { continue; }
@@ -79,6 +78,17 @@ function dcms_render_menu(array $items): string
       }
 
       $html .= '</ul>';
+      $html .= '</details>';
+    } else {
+      $html .= dcms_menu_item([
+        'name'       => $name,
+        'href'       => $href,
+        'is_current' => $isCurrent,
+        'width'      => $width,
+        'icon'       => $icon,
+        'attrs'      => '',
+        'element'    => 'a',
+      ]);
     }
 
     $html .= '</li>';

@@ -20,41 +20,70 @@ aside {
         li {
           width: 100%;
 
-          a, div {
+          a,
+          summary {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            padding: 0.6rem 0.12rem;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
             text-decoration: none;
             color: var(--color-text-light);
-            font-size: 0.65rem;
-            border-bottom: 1px solid var(--color-border-dark);
+            background: none;
+            width: 100%;
+            cursor: pointer;
+            list-style: none;
+            transition: background-color 0.2s ease, color 0.2s ease;
+
+            .menu-name {
+              flex: 1;
+            }
+
+            /*
+             * Focus ring
+             */
+            &:focus-visible {
+              outline: 2px solid var(--color-accent-primary);
+              outline-offset: -2px;
+            }
 
             &[aria-current="page"] {
               cursor: default;
               background-color: var(--color-bg-medium);
+              color: var(--color-accent-primary);
+
+              svg {
+                .primary {
+                  fill: var(--color-accent-primary);
+                }
+
+                .secondary {
+                  fill: rgba(0, 255, 178, 0.4);
+                }
+              }
+            }
+
+            &:hover:not([aria-current="page"]) {
+              background-color: rgba(255, 255, 255, 0.05);
             }
 
             svg {
+              flex-shrink: 0;
               fill: #fff;
-              margin-bottom: 0.25rem;
               transition: fill 0.2s ease;
             }
 
-            &:not([aria-current="page"]):hover {
-              background-color: var(--color-accent-primary-alpha);
-
-              span {
-                color: var(--color-accent-primary);
-              }
-
-              svg .primary {
-                fill: var(--color-accent-primary);
-              }
-
-              svg .secondary {
-                fill: var(--color-accent-primary-alpha);
-              }
+            /*
+             * Chevron indicator
+             */
+            .chevron {
+              flex-shrink: 0;
+              width: 0.375rem;
+              height: 0.375rem;
+              border-right: 2px solid var(--color-text-light);
+              border-top: 2px solid var(--color-text-light);
+              transform: rotate(135deg);
+              transition: transform 0.2s ease, border-color 0.2s ease;
             }
           }
         }
@@ -64,87 +93,83 @@ aside {
 }
 
 /*
- * Two-level submenu (desktop-only behavior, no JS)
+ * Two-level submenu (animated reveal; works with click/keyboard; hover-only extras gated below)
  */
-@media (hover: hover) and (pointer: fine) {
-  aside {
-    nav {
-      .nav-inner {
-        ul {
-          li {
+aside {
+  nav {
+    .nav-inner {
+      ul {
+        li {
+          position: relative;
+
+          >details>ul.submenu {
+            display: block;
             position: relative;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            background-color: var(--color-bg-medium);
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            overflow: hidden;
+            transform-origin: top;
+            transform: translateY(-4px);
+            transition: max-height 600ms ease, opacity 180ms ease, transform 220ms ease;
 
-            > ul.submenu {
-              /* Use animated reveal instead of display toggle (desktop-only) */
-              display: block; /* keep in flow for transition */
-              position: static; /* stacked vertical menu in sidebar */
-              list-style: none;
-              margin: 0;
-              padding: 0;
-              background-color: var(--color-bg-dark);
+            li {
+              a {
+                display: block;
+                padding: 0.5rem 1rem;
+                color: var(--color-text-light);
+                text-align: left;
+                text-decoration: none;
+                border-left: 3px solid transparent;
+                transition: background-color 0.2s ease, color 0.2s ease;
 
-              /* Collapsed state */
-              max-height: 0;
-              opacity: 0;
-              visibility: hidden;
-              pointer-events: none;
-              overflow: hidden;
-              transform-origin: top;
-              transform: translateY(-4px);
-              transition: max-height 220ms ease, opacity 180ms ease, transform 220ms ease;
+                &[aria-current="page"] {
+                  cursor: default;
+                  color: var(--color-accent-primary);
+                  border-left: 3px solid var(--color-accent-primary);
+                }
 
-              /* Submenu item styles */
-              li {
-                a {
-                  display: block;
-                  padding: 0.5rem 0.5rem;
-                  font-size: 0.62rem;
-                  color: var(--color-text-light);
-                  text-align: left;
-                  border-bottom: 1px solid var(--color-border-dark);
-
-                  &[aria-current="page"] {
-                    cursor: default;
-                    background-color: var(--color-bg-medium);
-                  }
-
-                  &:hover {
-                    background-color: var(--color-accent-primary-alpha);
-                    color: var(--color-accent-primary);
-                  }
+                &:hover:not([aria-current="page"]) {
+                  background-color: rgba(255, 255, 255, 0.05);
+                  color: var(--color-accent-primary);
                 }
               }
             }
+          }
 
-            &.has-children {
-              &.is-open > ul.submenu,
-              &:hover > ul.submenu,
-              &:focus-within > ul.submenu {
-                max-height: 100vh; /* Allows animation */
-                opacity: 1;
-                visibility: visible;
-                pointer-events: auto;
-                transform: translateY(0);
-              }
-            }
+          >details[open]>ul.submenu {
+            max-height: 100vh;
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateY(0);
+          }
+
+          >details[open]>summary .chevron {
+            transform: rotate(-45deg);
           }
         }
       }
     }
   }
+}
 
-  /*
-   * Reduced motion override
-   */
-  @media (prefers-reduced-motion: reduce) {
-    aside {
-      nav {
-        .nav-inner {
-          ul {
-            li {
-              > ul.submenu {
-                transition: none;
-              }
+/*
+ * Reduced motion override
+ */
+@media (prefers-reduced-motion: reduce) {
+  aside {
+    nav {
+      .nav-inner {
+        ul {
+          li {
+            >details>ul.submenu {
+              transition: none;
             }
           }
         }

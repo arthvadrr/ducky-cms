@@ -1,9 +1,8 @@
 import postcss from 'rollup-plugin-postcss';
 import postcssImport from 'postcss-import';
 
-// Export multiple build configs so Rollup watches/builds both bundles
 export default [
-  // Setup bundle (keeps existing behavior/output name)
+  // Setup bundle
   {
     input: 'styles/setup.css',
     output: {
@@ -14,7 +13,6 @@ export default [
     plugins: [
       postcss({
         plugins: [postcssImport()],
-        // Extract setup bundle CSS to desired filename
         extract: 'setup.css',
         minimize: true,
       }),
