@@ -57,7 +57,7 @@ try {
       $_SESSION['setup_token_valid'] = true;
 
       /**
-       * Regenerate session ID to prevent fixation
+       * Create a new session ID so attackers can't hijack the session
        */
       session_regenerate_id(true);
       $redirect_url = strtok($_SERVER['REQUEST_URI'], '?');
@@ -66,9 +66,6 @@ try {
       header('Location: ' . $redirect_url);
       exit;
     } else {
-      /**
-       * Invalid token in URL: show alert and do not allow proceeding
-       */
       $invalid_token_alert = dcms_alert('The setup link is invalid or has expired. Please create the database again to get a new link.', AlertType::danger);
     }
   }

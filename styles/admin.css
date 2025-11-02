@@ -1,6 +1,6 @@
 /*
  * Admin styles entry bundle
- * - Imports shared and admin modules in cascade order
+ * Imports shared and admin modules in cascade order
  */
 @import "shared/vars.css";
 @import "shared/fonts.css";

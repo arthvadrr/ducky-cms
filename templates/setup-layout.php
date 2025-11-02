@@ -47,6 +47,7 @@ function dcms_render_setup_layout(string $title = '', string $content = ''): voi
       </footer>
     </div>
   </div>
+  <script type="module" src="<?= $base_url . 'src/js/app.js' ?>"></script>
   </body>
   </html>
   <?php

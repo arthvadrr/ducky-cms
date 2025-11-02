@@ -51,7 +51,7 @@
   &.alert-danger {
     background-color : #FF6161;
     color            : #000;
-    border-color     : #ffd0d0;
+    border-color     : #FF9494;
 
     svg {
       stroke : #000;

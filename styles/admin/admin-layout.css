@@ -6,8 +6,9 @@ body {
   padding               : 0;
   display               : grid;
   min-height            : 100vh;
-  grid-template-columns : 150px auto;
+  grid-template-columns : 220px auto;
   font-family           : "Montserrat", sans-serif;
+  font-size: 16px;
   color                 : var(--color-gray-light);
 }
 

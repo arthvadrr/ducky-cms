@@ -1,24 +1,30 @@
 /*
  * Shared utilities: buttons and interactive helpers
  */
+* {
+  box-sizing: border-box;
+}
+
 .button {
-  position         : relative;
-  top              : 0;
-  display          : inline-block;
-  padding          : 1rem 1.5rem;
-  font-size        : clamp(1rem, 2vw, 1rem);
-  background-color : var(--color-gray-light);
-  color            : var(--color-text);
-  font-weight      : 800;
-  text-decoration  : none;
-  transition       : background-image 0.3s ease, outline-color 0.3s ease, outline-width 0.3s ease;
-  cursor           : pointer;
+  position: relative;
+  top: 0;
+  display: inline-block;
+  padding: 1rem 1.5rem;
+  font-size: clamp(0.8rem, 1.2vw, 1rem);
+  background-color: var(--color-gray-light);
+  color: var(--color-text);
+  font-weight: 800;
+  text-decoration: none;
+  cursor: pointer;
   flex-grow: 0;
   border: 0;
+  border-radius: 0.25rem;
+  overflow: clip;
+  transition: 80ms ease;
 
   &.outline {
     border: 2px solid var(--color-gray-light);
-    color : var(--color-gray-light);
+    color: var(--color-gray-light);
     background-color: transparent;
 
     &:hover,
@@ -38,11 +44,15 @@
   &:focus,
   &:active {
     background-color: var(--color-accent-primary);
-    box-shadow       : 0 0 20px var(--color-accent-primary-alpha);
-    color            : var(--color-text);
+    box-shadow: 0 0 20px var(--color-accent-primary-alpha);
+    color: var(--color-text);
+
+    &:after {
+      opacity: 1;
+    }
   }
 
   &:focus {
-    outline : 0.5rem solid var(--color-accent-primary-alpha);
+    outline: 0.5rem solid var(--color-accent-primary-alpha);
   }
 }
