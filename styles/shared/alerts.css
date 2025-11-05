@@ -2,71 +2,71 @@
  * Shared alerts: variants and icon layout
  */
 .alert {
-  display                   : grid;
-  grid-template-columns     : auto 1fr;
-  grid-template-rows        : 1fr;
-  grid-column-gap           : 0.5rem;
-  padding                   : 0.75rem 0.5rem;
-  border                    : 2px solid #000;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  border: 2px solid #000;
 
   .message {
-    align-self    : center;
-    justify-self  : center;
-    padding-right : 1.5rem;
-    text-align    : left;
-    font-size     : 0.8rem;
-    font-weight   : 800;
+    align-self: center;
+    justify-self: center;
+    padding-right: 1.5rem;
+    text-align: left;
+    font-size: 0.875rem;
+    font-weight: 700;
   }
 
   &.alert-info {
-    background-color : #d0c5e7;
-    color            : #3A3347;
-    border-color     : #eee9f6;
+    background-color: #d0c5e7;
+    color: #3A3347;
+    border-color: #eee9f6;
 
     svg {
-      stroke : #3A3347;
+      stroke: #3A3347;
     }
   }
 
   &.alert-success {
-    background-color : #7dc3b2;
-    color            : #1B2724;
-    border-color     : #c9f3dd;
+    background-color: #7dc3b2;
+    color: #1B2724;
+    border-color: #c9f3dd;
 
     svg {
-      stroke : #1B2724;
+      stroke: #1B2724;
     }
   }
 
   &.alert-warning {
-    background-color : #fcca4a;
-    color            : #413925;
-    border-color     : #fff0c9;
+    background-color: #fcca4a;
+    color: #413925;
+    border-color: #fff0c9;
 
     svg {
-      stroke : #413925;
+      stroke: #413925;
     }
   }
 
   &.alert-danger {
-    background-color : #FF6161;
-    color            : #000;
-    border-color     : #FF9494;
+    background-color: #FF6161;
+    color: #000;
+    border-color: #FF9494;
 
     svg {
-      stroke : #000;
+      stroke: #000;
     }
   }
 
   .icon {
-    display         : grid;
-    align-items     : center;
-    justify-content : center;
-    align-self      : flex-start;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
 
     svg {
-      width  : 1.4rem;
-      height : 1.4rem;
+      width: 1.4rem;
+      height: 1.4rem;
     }
   }
 }

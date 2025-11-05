@@ -2,33 +2,37 @@
  * Admin layout: page grid, aside container/branding, main content, and shared SVG base styling
  */
 body {
-  margin                : 0;
-  padding               : 0;
-  display               : grid;
-  min-height            : 100vh;
-  grid-template-columns : 220px auto;
-  font-family           : "Montserrat", sans-serif;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  min-height: 100vh;
+  grid-template-columns: 220px 1fr;
+  font-family: "Montserrat", sans-serif;
   font-size: 16px;
-  color                 : var(--color-gray-light);
+  color: var(--color-gray-light);
+}
+
+body:has(.right-sidebar) {
+  grid-template-columns: 220px 1fr 240px;
 }
 
 /*
  * Aside container and branding
  */
 aside {
-  display          : flex;
-  flex-direction   : column;
-  border-right     : 1px solid var(--color-border-dark);
-  background-color : var(--color-bg-dark);
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--color-border-dark);
+  background-color: var(--color-bg-dark);
 
   .branding {
-    display        : flex;
-    flex-direction : column;
-    padding        : 1rem 0;
-    border-bottom  : 1px solid var(--color-border-dark);
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border-dark);
 
     .site-title {
-      font-size : 0.75rem;
+      font-size: 0.875rem;
     }
   }
 }
@@ -37,22 +41,31 @@ aside {
  * Main content area
  */
 main {
-  padding : 1rem;
+  padding: 1rem;
+}
+
+/*
+ * Right sidebar
+ */
+.right-sidebar {
+  padding: 1rem;
+  border-left: 1px solid var(--color-border-dark);
+  background-color: var(--color-bg-dark);
 }
 
 /*
  * SVG base styles (icons used across admin)
  */
 svg {
-  stroke-width : 1px;
-  stroke       : var(--color-border-dark);
-  transition   : fill 0.2s ease;
+  stroke-width: 1px;
+  stroke: var(--color-border-dark);
+  transition: fill 0.2s ease;
 
   .primary {
-    fill : var(--color-text-light);
+    fill: var(--color-text-light);
   }
 
   .secondary {
-    fill : var(--color-gray-light);
+    fill: var(--color-gray-light);
   }
 }

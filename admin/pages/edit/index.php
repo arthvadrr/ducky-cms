@@ -11,10 +11,10 @@ use function DuckyCMS\DB\update_page;
 use function DuckyCMS\dcms_get_base_url;
 use function DuckyCMS\dcms_require_login;
 use function DuckyCMS\dcms_require_module;
-use function DuckyCMS\Setup\dcms_render_setup_layout;
+use function DuckyCMS\Setup\dcms_render_dashboard_layout;
 
 dcms_require_module('db');
-dcms_require_module('templates');
+dcms_require_module('admin');
 dcms_require_module('auth');
 
 dcms_require_login();
@@ -37,15 +37,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $slug    = $_POST['slug'] ?? '';
   $content = $_POST['content'] ?? '';
 
-  // Optional status update via select (only draft/published here)
+  /**
+   * Optional status update via select (only draft/published here)
+   */
   $newStatus = $_POST['status'] ?? ($page['status'] ?? 'draft');
+
   if (!in_array($newStatus, ['draft', 'published'], true)) {
     $newStatus = $page['status'] ?? 'draft';
   }
 
   $result = update_page($page_id, $title, $slug, $content);
 
-  // If content update succeeded and status changed, persist it
+  /**
+   * If content update succeeded and status changed, persist it
+   */
   if ($result === true && ($page['status'] ?? null) !== $newStatus) {
     execute_query("UPDATE pages SET status = :s WHERE id = :id", [':s' => $newStatus, ':id' => (int)$page_id]);
   }
@@ -68,12 +73,26 @@ ob_start();
 ?>
   <a href="<?= $pages_url ?>">Back to Pages</a>
 <?= $message ?>
-  <form method="post">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" value="<?= htmlspecialchars($page['title']) ?>" required>
+  <form method="post" id="edit-page-form">
+    <input 
+      type="text" 
+      id="title" 
+      name="title" 
+      value="<?= htmlspecialchars($page['title']) ?>" 
+      placeholder="Page title"
+      aria-label="Page title"
+      class="title-input"
+      required>
 
-    <label for="slug">Slug:</label>
-    <input type="text" id="slug" name="slug" value="<?= htmlspecialchars($page['slug']) ?>" required>
+    <input 
+      type="text" 
+      id="slug" 
+      name="slug" 
+      value="<?= htmlspecialchars($page['slug']) ?>" 
+      placeholder="Page slug"
+      aria-label="Page slug"
+      class="slug-input"
+      required>
 
     <label for="content">Content (HTML):</label>
     <textarea id="content" name="content" rows="10"><?= htmlspecialchars($page['content']) ?></textarea>
@@ -83,8 +102,6 @@ ob_start();
       <option value="draft" <?= ($page['status'] ?? '') === 'draft' ? 'selected' : '' ?>>Draft</option>
       <option value="published" <?= ($page['status'] ?? '') === 'published' ? 'selected' : '' ?>>Published</option>
     </select>
-
-    <button type="submit">Update Page</button>
   </form>
 <?php if (($page['status'] ?? '') !== 'trash'): ?>
   <form method="post" action="<?= $trash_url ?>" onsubmit="return confirm('Move to trash?');">
@@ -103,4 +120,12 @@ ob_start();
   </form>
 <?php endif; ?>
 <?php
-dcms_render_setup_layout('Edit Page', ob_get_clean());
+$main_content = ob_get_clean();
+
+ob_start();
+?>
+  <button type="submit" form="edit-page-form" class="button">Update Page</button>
+<?php
+$sidebar_content = ob_get_clean();
+
+dcms_render_dashboard_layout('Edit Page', $main_content, 'pages', $sidebar_content);

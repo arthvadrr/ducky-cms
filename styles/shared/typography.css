@@ -2,7 +2,7 @@
  * Shared typography: base sizes, headings, branding title
  */
 html {
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-size: 16px;
   line-height: 1.6;
 }
 
@@ -13,7 +13,7 @@ h4,
 h5,
 h6,
 .site-title {
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.2;
   margin: 0;
 }
@@ -28,7 +28,7 @@ h6,
 
 .site-title {
   display: inline-block;
-  font-weight: 900;
+  font-weight: 700;
   -webkit-text-fill-color: transparent;
   background: linear-gradient(150deg,
       var(--color-brand-orange-dark),
@@ -42,36 +42,36 @@ h6,
 
 span,
 p {
-  font-weight: 300;
+  font-weight: 400;
 }
 
 footer {
   color: var(--color-brand-orange);
-  font-weight: 300;
+  font-weight: 400;
 }
 
 h1 {
-  font-size: clamp(2.2rem, 4vw, 2.4rem);
+  font-size: 2.5rem;
   color: var(--color-brand-white);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 h2 {
-  font-size: clamp(1.8rem, 4vw, 2rem);
+  font-size: 2rem;
 }
 
 h3 {
-  font-size: clamp(1.6rem, 3vw, 1.8rem);
+  font-size: 1.5rem;
 }
 
 h4 {
-  font-size: clamp(1.4rem, 2vw, 1.6rem);
+  font-size: 1.25rem;
 }
 
 h5 {
-  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  font-size: 1.125rem;
 }
 
 h6 {
-  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  font-size: 1rem;
 }

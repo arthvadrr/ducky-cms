@@ -17,7 +17,8 @@ use function DuckyCMS\dcms_require_module;
 function dcms_render_dashboard_layout(
   string      $title = '',
   string      $content = '',
-  string|null $current_menu_item = null): void
+  string|null $current_menu_item = null,
+  string      $sidebar_content = ''): void
 {
   dcms_require_module('partials');
   $base_url      = dcms_get_base_url();
@@ -97,6 +98,11 @@ function dcms_render_dashboard_layout(
   <main>
     <?= $content ?>
   </main>
+  <?php if ($sidebar_content): ?>
+  <aside class="right-sidebar">
+    <?= $sidebar_content ?>
+  </aside>
+  <?php endif; ?>
   <script>
     (function(){
       var container = document.querySelector('aside nav .nav-inner');
