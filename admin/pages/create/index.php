@@ -44,20 +44,40 @@ $pages_url = dcms_get_base_url() . 'admin/pages/?status=draft';
 
 ob_start();
 ?>
-  <h2>Create Page</h2>
-  <a href="<?= $pages_url ?>">Back to Pages</a>
+  <!-- <h1>Create Page</h1>
+  <a href="<?= $pages_url ?>">Back to Pages</a> -->
 <?= $message ?>
-  <form method="post">
-    <label for="title">Title:</label>
-    <input type="text" id="title" name="title" value="<?= htmlspecialchars($title) ?>" required>
+  <form method="post" id="create-page-form">
+    <input 
+      type="text" 
+      id="title" 
+      name="title" 
+      value="<?= htmlspecialchars($title) ?>" 
+      placeholder="Page title"
+      aria-label="Page title"
+      class="title-input"
+      required>
 
-    <label for="slug">Slug:</label>
-    <input type="text" id="slug" name="slug" value="<?= htmlspecialchars($slug) ?>" required>
+    <input 
+      type="text" 
+      id="slug" 
+      name="slug" 
+      value="<?= htmlspecialchars($slug) ?>" 
+      placeholder="Page slug"
+      aria-label="Page slug"
+      class="slug-input"
+      required>
 
-    <label for="content">HTML Content:</label>
+    <label for="content">HTML</label>
     <textarea id="content" name="content" rows="10" cols="50"><?= htmlspecialchars($content) ?></textarea>
-
-    <button type="submit">Create Page</button>
   </form>
 <?php
-dcms_render_dashboard_layout('Create Page', ob_get_clean(), 'create-page');
+$main_content = ob_get_clean();
+
+ob_start();
+?>
+  <button type="submit" form="create-page-form" class="button">Create Page</button>
+<?php
+$sidebar_content = ob_get_clean();
+
+dcms_render_dashboard_layout('Create Page', $main_content, 'pages-create', $sidebar_content);
